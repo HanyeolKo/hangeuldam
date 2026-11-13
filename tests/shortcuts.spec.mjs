@@ -65,8 +65,10 @@ async function koreanKey(context, page, key, code, modifiers = 2) {
 }
 
 test('shortcuts: parent Ctrl/Cmd and Korean layout open, download and local save', async ({ page, context }) => {
-  await page.goto('./');
+  // Subscribe before navigation so Playwright's file-dialog interception is installed
+  // before input from the separate CDP session can request a native chooser.
   const choosing = page.waitForEvent('filechooser');
+  await page.goto('./');
   await koreanKey(context, page, 'ㅐ', 'KeyO');
   await (await choosing).setFiles(path.join(fixtures, 'multipage.hwp'));
   await ready(page);

@@ -59,7 +59,8 @@ test('independent HWP images and HWPX table', async ({ page }) => {
   expect(await page.locator('#page-host svg path, #page-host svg line, #page-host svg rect').count()).toBeGreaterThan(5);
   await page.screenshot({ path: path.join(qa, 'table.png') });
   await page.locator('#toggle-text').click();
-  expect((await page.locator('#document-text').textContent()).length).toBeGreaterThan(10);
+  await expect(page.locator('#text-panel')).toBeVisible();
+  await expect(page.locator('#document-text')).toHaveText(/[\s\S]{11,}/);
 });
 
 test('offline cold reload, saved file, and a newly opened HWPX without requests outside app', async ({ page, context }) => {
