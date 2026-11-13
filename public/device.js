@@ -35,15 +35,33 @@ function setDrawer(open) {
 function applyCategory() {
   root.dataset.device = category();
   root.dataset.deviceDetected = automatic;
-  const picker = document.getElementById('device-view');
-  if (picker) {
+  document.querySelectorAll('[data-device-picker]').forEach(picker => {
     picker.value = preference;
     picker.options[0].textContent = `자동 · ${labels[automatic]}`;
-  }
+  });
   setDrawer(false);
   document.querySelectorAll('#editor-host iframe').forEach(configureEditorDevice);
   window.dispatchEvent(new CustomEvent('hangeuldam:devicechange', { detail: { device: category(), detected: automatic } }));
   requestAnimationFrame(() => document.getElementById('fit-page')?.click());
+}
+
+function createModePicker(id, className) {
+  const setting = document.createElement('label');
+  setting.className = className;
+  setting.htmlFor = id;
+  const label = document.createElement('span'); label.textContent = '화면 보기'; setting.append(label);
+  const picker = document.createElement('select'); picker.id = id; picker.dataset.devicePicker = '';
+  for (const [value, text] of [['auto', `자동 · ${labels[automatic]}`], ...Object.entries(labels)]) {
+    const option = document.createElement('option'); option.value = value; option.textContent = text; picker.append(option);
+  }
+  picker.value = preference;
+  picker.addEventListener('change', () => {
+    preference = picker.value;
+    try { localStorage.setItem(preferenceKey, preference); } catch { /* Storage is optional. */ }
+    applyCategory();
+  });
+  setting.append(picker);
+  return setting;
 }
 
 function mountDeviceControls() {
@@ -67,19 +85,14 @@ function mountDeviceControls() {
   backdrop.setAttribute('aria-label', '문서함 닫기'); backdrop.tabIndex = -1;
   backdrop.addEventListener('click', () => setDrawer(false));
   document.body.append(backdrop);
-  const setting = document.createElement('label'); setting.className = 'device-view-setting';
-  setting.htmlFor = 'device-view'; setting.append('화면 보기');
-  const picker = document.createElement('select'); picker.id = 'device-view';
-  for (const [value, text] of [['auto', `자동 · ${labels[automatic]}`], ...Object.entries(labels)]) {
-    const option = document.createElement('option'); option.value = value; option.textContent = text; picker.append(option);
-  }
-  picker.value = preference;
-  picker.addEventListener('change', () => {
-    preference = picker.value;
-    try { localStorage.setItem(preferenceKey, preference); } catch { /* Storage is optional. */ }
-    applyCategory();
-  });
-  setting.append(picker); sidebar.querySelector('.sidebar-description').after(setting);
+  sidebar.querySelector('.sidebar-description').after(createModePicker('device-view', 'device-view-setting'));
+  // Keep an escape route available even when a chosen layout hides its sidebar.
+  const modebar = document.createElement('nav'); modebar.className = 'device-modebar';
+  modebar.setAttribute('aria-label', '화면 모드');
+  modebar.append(createModePicker('device-view-top', 'device-mode-switch'));
+  document.querySelector('.appbar').after(modebar);
+  // Native fullscreen only displays the workspace subtree, so it needs a picker too.
+  document.querySelector('.document-actions')?.prepend(createModePicker('device-view-document', 'device-mode-switch document-mode-switch'));
   document.getElementById('saved-list').addEventListener('click', event => {
     if (event.target.closest('.saved-open')) setDrawer(false);
   });

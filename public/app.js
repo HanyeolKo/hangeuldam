@@ -2,13 +2,15 @@
 import DOMPurify from './vendor/purify.es.mjs';
 import { createEditor } from './vendor/editor-sdk/index.js';
 import { configureEditorDevice } from './device.js';
+import { createShortcuts } from './shortcuts.js';
+import { initOffline } from './offline.js';
 
 const $ = (id) => document.getElementById(id);
 const MAX_SIZE = 50 * 1024 * 1024;
 let worker, sequence = 0, current = null, zoom = 1, naturalWidth = 794;
-let generation = 0, busy = false, dbPromise, registration;
+let generation = 0, busy = false, dbPromise;
 let editor = null, editing = false, dirtyTimer = null, checkingDirty = false;
-let preparingOffline = false, operationLocked = false, fullscreenPending = false, fallbackExpanded = false;
+let operationLocked = false, fullscreenPending = false, fallbackExpanded = false;
 const pending = new Map();
 const status = (text) => { $('status').textContent = text; $('fullscreen-status').textContent = text; };
 const error = (text) => { $('error-message').textContent = text; $('error-banner').hidden = false; };
@@ -87,14 +89,6 @@ document.addEventListener('fullscreenchange', () => { syncFullscreen(); refitExp
 window.addEventListener('resize', () => {
   if (isDocumentFullscreen() && current && !editing && $('text-panel').hidden) fitPage();
 });
-
-function handleFullscreenEscape(event) {
-  if (event.key !== 'Escape' || !isDocumentFullscreen()) return false;
-  event.preventDefault();
-  event.stopImmediatePropagation();
-  void leaveDocumentFullscreen();
-  return true;
-}
 
 function stopWorker() {
   worker?.terminate();
@@ -396,132 +390,19 @@ $('cancel-load').onclick = async () => {
   if (editor) { status('편집 문서 저장이 끝날 때까지 기다려 주세요.'); return; }
   await closeDocument(); status('문서 처리를 취소했습니다.');
 };
-let shortcutInvoker = null;
-function showShortcuts(event) {
-  shortcutInvoker = event.currentTarget;
-  if (!$('shortcuts-dialog').open) $('shortcuts-dialog').showModal();
-  $('editor-host').inert = true;
-}
-$('shortcuts-button').onclick = showShortcuts;
-$('document-shortcuts').onclick = showShortcuts;
-$('close-shortcuts').onclick = () => $('shortcuts-dialog').close();
-$('shortcuts-dialog').addEventListener('cancel', event => { event.preventDefault(); $('shortcuts-dialog').close(); });
-$('shortcuts-dialog').addEventListener('close', () => {
-  $('editor-host').inert = busy;
-  if (shortcutInvoker?.isConnected) shortcutInvoker.focus({ preventScroll: true });
+const shortcuts = createShortcuts({
+  getState: () => ({ current, busy, operationLocked, editing }),
+  getEditor: () => editor,
+  isFullscreen: isDocumentFullscreen,
+  leaveFullscreen: leaveDocumentFullscreen,
+  onError: error,
+  onStatus: status,
+});
+window.addEventListener('hangeuldam:readerzoom', event => {
+  if (current && !busy && !editing && event.detail === 1) { zoom = 1; applyZoom(); }
 });
 
-function hostShortcut(event) {
-  if (!(event.ctrlKey || event.metaKey) || event.altKey) return null;
-  const key = event.key.toLowerCase();
-  if (!event.shiftKey && (event.code === 'KeyO' || key === 'o' || key === 'ㅐ')) return 'open';
-  if (event.code === 'KeyS' || key === 's' || key === 'ㄴ') return event.shiftKey ? 'local' : 'download';
-  return null;
-}
-
-function handleHostKeys(event) {
-  // Do not turn an IME composition key into a file action or a fullscreen exit.
-  if (event.isComposing || event.keyCode === 229) return false;
-  const action = hostShortcut(event);
-  if ($('shortcuts-dialog').open) {
-    if (event.key === 'Escape' || action) {
-      event.preventDefault(); event.stopImmediatePropagation();
-      if (event.key === 'Escape') $('shortcuts-dialog').close();
-    }
-    return true;
-  }
-  // Let an editor dialog consume Escape before leaving the document's fullscreen view.
-  const sourceDocument = event.currentTarget;
-  if (sourceDocument !== document && sourceDocument.querySelector('.modal-overlay, .cp-overlay')) {
-    if (action) { event.preventDefault(); event.stopImmediatePropagation(); return true; }
-    return false;
-  }
-  if (action) {
-    // Studio marks embedded save keys prevented before this listener; still consume them here.
-    event.preventDefault(); event.stopImmediatePropagation();
-    if (!event.repeat) {
-      if (action === 'open' && !operationLocked) chooseFile();
-      if (action === 'download' && !busy) $('download-hwp').click();
-      if (action === 'local' && !busy) $('save-local').click();
-    }
-    return true;
-  }
-  return handleFullscreenEscape(event);
-}
-
-document.addEventListener('keydown', event => {
-  if (handleHostKeys(event)) return;
-  if (event.isComposing || event.keyCode === 229) return;
-  if (event.key === 'Escape' && busy) $('cancel-load').click();
-  if (current && !busy && !['INPUT', 'TEXTAREA', 'SELECT'].includes(event.target.tagName) && !event.target.isContentEditable) {
-    if (event.key === 'PageDown') { event.preventDefault(); showPage(current.page + 1); }
-    if (event.key === 'PageUp') { event.preventDefault(); showPage(current.page - 1); }
-  }
-}, true);
-
-async function offlineState() {
-  if (!window.isSecureContext || !('serviceWorker' in navigator)) {
-    $('offline-status').textContent = '오프라인 준비는 보안 연결(HTTPS) 또는 localhost에서 가능합니다. 내려받은 실행 폴더도 사용할 수 있습니다.';
-    $('offline-button').disabled = true;
-    return;
-  }
-  try {
-    registration = await navigator.serviceWorker.getRegistration(new URL('./', location.href));
-    if (registration?.active) {
-      const channel = new MessageChannel();
-      const response = await new Promise((resolve) => {
-        const timer = setTimeout(() => resolve(false), 5000);
-        channel.port1.onmessage = ({ data }) => { clearTimeout(timer); resolve(data.ready && data.features?.includes('device-ui-v3')); };
-        registration.active.postMessage({ type: 'STATUS' }, [channel.port2]);
-      });
-      if (response) {
-        $('offline-status').textContent = navigator.onLine ? '오프라인 준비 완료 · 인터넷 없이 문서를 열 수 있습니다.' : '오프라인 사용 중 · 저장한 문서와 새 파일을 열 수 있습니다.';
-        $('offline-button').textContent = '오프라인 준비 다시 확인';
-        return true;
-      }
-    }
-    $('offline-status').textContent = '편집기와 한글 글꼴을 기기에 저장합니다. 준비를 마치면 오프라인에서도 편집·HWP 저장이 가능합니다.';
-  } catch { $('offline-status').textContent = '오프라인 준비 상태를 확인하지 못했습니다. 다시 시도해 주세요.'; }
-}
-
-$('offline-button').onclick = async () => {
-  preparingOffline = true;
-  $('offline-button').disabled = true;
-  $('offline-status').textContent = '앱과 한글 글꼴을 저장하고 있습니다. 잠시만 기다려 주세요…';
-  try {
-    if (!navigator.onLine) {
-      if (await offlineState()) return;
-      throw new Error('처음 준비할 때는 인터넷 연결이 필요합니다.');
-    }
-    registration = await navigator.serviceWorker.register('./sw.js', { scope: './', updateViaCache: 'none' });
-    await registration.update();
-    const installing = registration.installing || registration.waiting;
-    if (installing && installing.state !== 'activated') await new Promise((resolve, reject) => {
-      const timeout = setTimeout(() => reject(new Error('다운로드 시간을 초과했습니다. 네트워크 연결을 확인해 주세요.')), 120000);
-      const changed = () => {
-        if (installing.state === 'activated') { clearTimeout(timeout); resolve(); }
-        if (installing.state === 'redundant') { clearTimeout(timeout); reject(new Error('앱 다운로드에 실패했습니다. 저장 공간과 네트워크 연결을 확인해 주세요.')); }
-      };
-      installing.addEventListener('statechange', changed); changed();
-    });
-    // On an already installed version, repair any entries evicted by the browser.
-    if (registration.active) await new Promise((resolve, reject) => {
-      const channel = new MessageChannel();
-      const timeout = setTimeout(() => reject(new Error('앱 저장 확인 시간을 초과했습니다.')), 120000);
-      channel.port1.onmessage = ({ data }) => { clearTimeout(timeout); data.error ? reject(new Error(data.error)) : resolve(); };
-      registration.active.postMessage({ type: 'PREPARE' }, [channel.port2]);
-    });
-    if (navigator.storage?.persist) await navigator.storage.persist();
-    await offlineState();
-  } catch (e) { $('offline-status').textContent = `오프라인 준비 실패: ${e.message}`; }
-  finally { preparingOffline = false; $('offline-button').disabled = false; }
-};
-if ('serviceWorker' in navigator) navigator.serviceWorker.addEventListener('message', ({ data }) => {
-  if (preparingOffline && data?.type === 'HANGEULDAM_CACHE_PROGRESS') $('offline-status').textContent = `오프라인 편집기 저장 중 · ${data.complete} / ${data.total}개 파일`;
-});
-window.addEventListener('online', offlineState);
-window.addEventListener('offline', offlineState);
-refreshSaved(); offlineState(); resetView();
+refreshSaved(); initOffline(); resetView();
 
 function downloadBlob(blob, name) {
   const url = URL.createObjectURL(blob);
@@ -589,7 +470,7 @@ function installEditorKeys(instance) {
   const stylesheet = instance.element.contentDocument.createElement('link');
   stylesheet.rel = 'stylesheet'; stylesheet.href = new URL('./studio-host.css', location.href).href;
   instance.element.contentDocument.head.append(stylesheet);
-  instance.element.contentDocument.addEventListener('keydown', handleHostKeys, true);
+  shortcuts.bindEditor(instance.element);
   // Hyperlinks and form actions never navigate or submit user document data.
   instance.element.contentWindow.rhwpStudio?.links?.setHandler(() => true);
   instance.element.contentWindow.rhwpStudio?.forms?.setActionsEnabled(false);

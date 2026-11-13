@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="./fonts.css">
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./device.css">
+  <link rel="stylesheet" href="./offline.css">
   <script type="module" src="./app.js"></script>
 </head>
 <body>
@@ -40,7 +41,7 @@
     <span class="appbar-divider" aria-hidden="true"></span>
     <p class="tagline">내 문서를, 어디서나.</p>
     <div class="appbar-actions">
-      <span class="readonly-badge"><span aria-hidden="true"></span>오프라인 편집 <small>v0.3</small></span>
+      <span class="readonly-badge"><span aria-hidden="true"></span>오프라인 편집 <small>v0.4</small></span>
       <button type="button" id="shortcuts-button" class="icon-button shortcut-help" aria-label="키보드 단축키" title="키보드 단축키" aria-haspopup="dialog" aria-controls="shortcuts-dialog"><svg class="icon" aria-hidden="true"><use href="#i-keyboard"/></svg></button>
       <button type="button" id="open-file" aria-keyshortcuts="Control+O Meta+O" class="button primary compact"><svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg><span>파일 열기</span><kbd>Ctrl O</kbd></button>
     </div>
@@ -58,8 +59,9 @@
       <div class="sidebar-bottom">
         <section class="offline-card" aria-labelledby="offline-title">
           <div class="offline-heading"><span class="offline-icon"><svg class="icon" aria-hidden="true"><use href="#i-device"/></svg></span><h3 id="offline-title">인터넷 없이도 가볍게</h3></div>
-          <p id="offline-status" role="status">뷰어를 미리 저장하면 인터넷이 없는 환경에서도 사용할 수 있어요.</p>
+          <p id="offline-status" role="status">편집기를 미리 저장하면 인터넷 없이도 문서를 열고 편집할 수 있어요.</p>
           <button id="offline-button" type="button" class="button secondary">오프라인 사용 준비<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+          <details class="offline-help"><summary>인터넷 없이 다시 여는 방법</summary><p>준비 완료 후 같은 브라우저에서 이 주소를 다시 열거나, 브라우저 메뉴에서 설치한 앱을 실행하세요. 일반 ‘페이지 저장’ 파일로 편집기를 실행하는 방식은 지원하지 않습니다.</p><p>사이트 저장 데이터를 지우면 다시 준비해야 합니다. 중요한 문서는 HWP 파일로 따로 보관하세요.</p></details>
         </section>
         <div class="local-privacy"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg><p>문서는 서버로 전송되지 않습니다.<br><span>편집 복구본도 이 브라우저에만 저장됩니다.</span></p></div>
       </div>
@@ -103,17 +105,7 @@
       <dialog id="shortcuts-dialog" class="shortcuts-dialog" aria-labelledby="shortcuts-title" aria-describedby="shortcuts-intro">
         <div class="shortcuts-heading"><h2 id="shortcuts-title">키보드 단축키</h2><button id="close-shortcuts" type="button" class="icon-button" aria-label="단축키 도움말 닫기" autofocus><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div>
         <p id="shortcuts-intro">Mac에서는 Ctrl 대신 ⌘ Command를 사용하세요.<br>모바일·태블릿에서도 연결한 키보드로 사용할 수 있습니다.</p>
-        <dl class="shortcuts-list">
-          <div><dt>파일 열기</dt><dd><kbd>Ctrl</kbd> + <kbd>O</kbd></dd></div>
-          <div><dt>HWP 파일 다운로드</dt><dd><kbd>Ctrl</kbd> + <kbd>S</kbd></dd></div>
-          <div><dt>이 브라우저에 기기 저장</dt><dd><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd></dd></div>
-          <div><dt>실행 취소 · 다시 실행</dt><dd><kbd>Ctrl</kbd> + <kbd>Z</kbd> / <kbd>Y</kbd><small>다시 실행: Ctrl 또는 ⌘ + Shift + Z도 가능</small></dd></div>
-          <div><dt>전체 선택</dt><dd><kbd>Ctrl</kbd> + <kbd>A</kbd></dd></div>
-          <div><dt>복사 · 잘라내기 · 붙여넣기</dt><dd><kbd>Ctrl</kbd> + <kbd>C</kbd> / <kbd>X</kbd> / <kbd>V</kbd></dd></div>
-          <div><dt>굵게 · 기울임 · 밑줄</dt><dd><kbd>Ctrl</kbd> + <kbd>B</kbd> / <kbd>I</kbd> / <kbd>U</kbd></dd></div>
-          <div><dt>이전 쪽 · 다음 쪽 (읽기 모드)</dt><dd><kbd>Page Up</kbd> / <kbd>Page Down</kbd></dd></div>
-          <div><dt>도움말 닫기 · 전체화면 나가기</dt><dd><kbd>Esc</kbd></dd></div>
-        </dl>
+        <dl class="shortcuts-list"></dl>
         <p class="shortcuts-note">글자 편집 단축키는 편집 영역에 커서를 둔 상태에서 사용하세요. 한글 조합 중에는 파일 단축키가 실행되지 않습니다. 도움말을 먼저 닫은 뒤 Esc를 다시 누르면 전체화면을 나갑니다.</p>
       </dialog>
       <p id="fullscreen-status" class="fullscreen-status" role="status" aria-live="polite"></p>

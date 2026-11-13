@@ -1,6 +1,6 @@
 {
   "name": "hangeul-viewer",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "한글담: Rust/WASM 기반 오프라인 HWP·HWPX 편집기",
   "scripts": {
     "start": "python3 scripts/serve.py",

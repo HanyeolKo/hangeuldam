@@ -138,6 +138,62 @@ test('phone orientation keeps phone layout and explicit view preference can be c
     await page.locator('#device-library').tap();
     await page.locator('#device-view').selectOption('auto');
     await expect(page.locator('html')).toHaveAttribute('data-device', 'phone');
+    await page.setViewportSize({ width: 390, height: 844 });
+    const picker = page.locator('#device-view-top');
+    for (const mode of ['desktop', 'tablet', 'phone', 'desktop', 'auto']) {
+      await expect(picker).toBeVisible();
+      const bounds = await picker.boundingBox();
+      expect(bounds.x).toBeGreaterThanOrEqual(0);
+      expect(bounds.x + bounds.width).toBeLessThanOrEqual(390);
+      await picker.selectOption(mode);
+      await expect(page.locator('html')).toHaveAttribute('data-device', mode === 'auto' ? 'phone' : mode);
+      await expect(page.locator('#device-view')).toHaveValue(mode);
+      await expect(page.locator('#device-view-document')).toHaveValue(mode);
+    }
+    await picker.selectOption('desktop');
+    await page.reload();
+    await expect(page.locator('html')).toHaveAttribute('data-device', 'desktop');
+    await expect(picker).toBeVisible();
+    await picker.selectOption('auto');
+    await expect(page.locator('html')).toHaveAttribute('data-device', 'phone');
+  } finally { await context.close(); }
+});
+
+test('fullscreen mode picker preserves edits and shortcut keys stay visible in every device layout', async ({ browser, baseURL }) => {
+  const context = await touchContext(browser, baseURL, 'phone', { width: 390, height: 844 });
+  const page = await context.newPage();
+  try {
+    await openSample(page);
+    await page.locator('#edit-document').tap();
+    await expect(page.locator('#edit-document')).toHaveAttribute('aria-pressed', 'true', { timeout: 60000 });
+    await expect(page.locator('#busy-overlay')).toBeHidden();
+    const iframe = page.locator('#editor-host iframe');
+    await iframe.evaluate(frame => { frame.dataset.modeSwitchTest = 'original-frame'; });
+    const input = page.frameLocator('#editor-host iframe').locator('textarea[aria-label="문서 편집 입력"]');
+    await input.focus();
+    await page.keyboard.press('Control+Home');
+    await page.keyboard.insertText('화면모드전환보존 ');
+    await page.locator('#toggle-fullscreen').tap();
+    await expect.poll(() => page.evaluate(() => Boolean(document.fullscreenElement || document.querySelector('#drop-zone.is-expanded')))).toBe(true);
+    const picker = page.locator('#device-view-document');
+    for (const mode of ['tablet', 'desktop', 'phone']) {
+      await expect(picker).toBeVisible();
+      await picker.selectOption(mode);
+      await expect(iframe).toHaveAttribute('data-mode-switch-test', 'original-frame');
+      await expect(page.locator('#doc-state')).toContainText('저장하지 않은');
+      await page.locator('#document-shortcuts').click();
+      await expect(page.locator('#shortcuts-dialog')).toBeVisible();
+      const keys = page.locator('#shortcuts-dialog kbd');
+      expect(await keys.count()).toBeGreaterThan(10);
+      for (const key of await keys.all()) await expect(key).toBeVisible();
+      await page.locator('#close-shortcuts').click();
+    }
+    const downloading = page.waitForEvent('download');
+    await page.locator('#download-hwp').click();
+    expect(readText(await readFile(await (await downloading).path()))).toContain('화면모드전환보존');
+    await expect(page.locator('#busy-overlay')).toBeHidden();
+    await page.locator('#toggle-fullscreen').click();
+    await expect(page.locator('#device-view-top')).toBeVisible();
   } finally { await context.close(); }
 });
 
