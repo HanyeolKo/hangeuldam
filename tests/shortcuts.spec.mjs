@@ -55,6 +55,19 @@ async function downloadWith(page, action) {
   await expect(page.locator('#error-banner')).toBeHidden();
   return { bytes, text };
 }
+async function savedKeys(page) {
+  return page.evaluate(() => new Promise((resolve, reject) => {
+    const opening = indexedDB.open('hangeuldam-documents-v1', 1);
+    opening.onerror = () => reject(opening.error);
+    opening.onsuccess = () => {
+      const database = opening.result;
+      const transaction = database.transaction('documents', 'readonly');
+      const request = transaction.objectStore('documents').getAllKeys();
+      transaction.oncomplete = () => { database.close(); resolve(request.result); };
+      transaction.onerror = () => { database.close(); reject(transaction.error); };
+    };
+  }));
+}
 async function koreanKey(context, page, key, code, modifiers = 2) {
   const cdp = await context.newCDPSession(page);
   try {
@@ -72,10 +85,19 @@ test('shortcuts: parent Ctrl/Cmd and Korean layout open, download and local save
   await koreanKey(context, page, 'ㅐ', 'KeyO');
   await (await choosing).setFiles(path.join(fixtures, 'multipage.hwp'));
   await ready(page);
-  const saved = await downloadWith(page, () => page.keyboard.press('Meta+s'));
-  expect(saved.bytes).toEqual(await readFile(path.join(fixtures, 'multipage.hwp')));
-  await page.keyboard.press('Control+Shift+s');
+  const unintendedDownloads = [];
+  page.on('download', download => unintendedDownloads.push(download.suggestedFilename()));
+  await page.keyboard.press('Meta+s');
   await expect(page.locator('#save-local')).toHaveText('기기에 저장됨');
+  await expect(page.locator('#busy-overlay')).toBeHidden();
+  await expect(page.locator('#saved-list .saved-open')).toHaveCount(1);
+  expect(unintendedDownloads).toEqual([]);
+  const saved = await downloadWith(page, () => page.keyboard.press('Meta+Shift+s'));
+  expect(saved.bytes).toEqual(await readFile(path.join(fixtures, 'multipage.hwp')));
+  await page.keyboard.press('Control+s');
+  await expect(page.locator('#save-local')).toHaveText('기기에 저장됨');
+  await expect(page.locator('#busy-overlay')).toBeHidden();
+  expect(unintendedDownloads).toEqual(['multipage.hwp']);
   await expect(page.locator('#saved-list .saved-open')).toHaveCount(1);
   const opening = page.waitForEvent('filechooser');
   await page.keyboard.press('Control+o');
@@ -83,29 +105,56 @@ test('shortcuts: parent Ctrl/Cmd and Korean layout open, download and local save
   await ready(page);
 });
 
-test('shortcuts: iframe host keys preserve edits and Shift+S saves locally without downloading', async ({ page, context }) => {
+test('shortcuts: Ctrl/Cmd+S updates one local copy and preserves editing focus without downloading', async ({ page, context }) => {
   await open(page);
   const input = await edit(page);
   await page.keyboard.insertText('공통단축키 ');
-  const exported = await downloadWith(page, () => koreanKey(context, page, 'ㄴ', 'KeyS'));
+  const exported = await downloadWith(page, () => koreanKey(context, page, 'ㄴ', 'KeyS', 10)); // Ctrl + Shift downloads.
   expect(exported.text).toContain('공통단축키 가나다');
-  await input.focus();
+  await expect(input).toBeFocused();
   await page.keyboard.insertText('기기보관 ');
   const unintendedDownloads = [];
   page.on('download', download => unintendedDownloads.push(download.suggestedFilename()));
-  await koreanKey(context, page, 'ㄴ', 'KeyS', 10); // Ctrl + Shift, Korean keyboard active.
+  await koreanKey(context, page, 'ㄴ', 'KeyS'); // Ctrl + S, Korean keyboard active.
   await expect(page.locator('#save-local')).toHaveText('기기에 저장됨');
+  await expect(page.locator('#busy-overlay')).toBeHidden();
   await expect(page.locator('#doc-state')).not.toContainText('저장하지 않은');
+  await expect(page.locator('#saved-list .saved-open')).toHaveCount(1);
+  const firstKeys = await savedKeys(page);
+  expect(firstKeys).toHaveLength(1);
+  await expect(input).toBeFocused();
+  // Saving must return the keyboard to the same caret without an extra click/focus call.
+  await page.keyboard.insertText('다시저장 ');
+  await expect(page.locator('#doc-state')).toContainText('저장하지 않은');
+  await page.keyboard.press('Meta+s');
+  await expect(page.locator('#busy-overlay')).toBeHidden();
+  await expect(page.locator('#doc-state')).not.toContainText('저장하지 않은');
+  await expect(input).toBeFocused();
+  await expect(page.locator('#saved-list .saved-open')).toHaveCount(1);
+  expect(await savedKeys(page)).toEqual(firstKeys);
+  // The selected text, not just the caret focus, must survive a save operation.
+  await page.keyboard.press('Shift+Home');
+  await page.keyboard.press('Control+s');
+  await expect(page.locator('#busy-overlay')).toBeHidden();
+  await expect(input).toBeFocused();
+  await page.keyboard.insertText('선택보존 ');
+  await expect(page.locator('#doc-state')).toContainText('저장하지 않은');
+  await page.keyboard.press('Control+s');
+  await expect(page.locator('#busy-overlay')).toBeHidden();
+  await expect(page.locator('#doc-state')).not.toContainText('저장하지 않은');
+  expect(await savedKeys(page)).toEqual(firstKeys);
   expect(unintendedDownloads).toEqual([]);
-  await input.focus();
   const choosing = page.waitForEvent('filechooser');
   await page.keyboard.press('Meta+o');
   await (await choosing).setFiles(path.join(fixtures, 'multipage.hwp'));
   await ready(page);
+  await page.reload();
+  await expect(page.locator('#saved-list .saved-open')).toHaveCount(1);
   await page.locator('#saved-list .saved-open').click();
   await ready(page);
   await page.locator('#toggle-text').click();
-  await expect(page.locator('#document-text')).toContainText('공통단축키 기기보관 가나다');
+  await expect(page.locator('#document-text')).toContainText('선택보존 가나다');
+  await expect(page.locator('#document-text')).not.toContainText('다시저장');
 });
 
 test('shortcuts: Studio undo, redo, select all, copy and paste still operate on document text', async ({ page, context, baseURL }) => {
@@ -122,7 +171,7 @@ test('shortcuts: Studio undo, redo, select all, copy and paste still operate on 
   await page.keyboard.press('Control+v');
   await page.keyboard.press('Control+z');
   await page.keyboard.press('Control+Shift+z');
-  const exported = await downloadWith(page, () => page.keyboard.press('Control+s'));
+  const exported = await downloadWith(page, () => page.keyboard.press('Control+Shift+s'));
   expect(exported.text.split('복사검증').length - 1).toBe(2);
 });
 
@@ -139,6 +188,8 @@ test('shortcuts: help is modal, preserves question-mark typing and closes before
   await expect(page.locator('#editor-host')).toHaveAttribute('inert', '');
   await page.keyboard.insertText('도움말중입력금지');
   await page.keyboard.press('Control+s');
+  await page.keyboard.press('Control+Shift+s');
+  await expect(page.locator('#saved-list .saved-open')).toHaveCount(0);
   await page.keyboard.press('Escape');
   await expect(page.locator('#shortcuts-dialog')).not.toBeVisible();
   await expect.poll(() => page.evaluate(() => document.fullscreenElement?.id)).toBe('drop-zone');
@@ -153,7 +204,7 @@ test('shortcuts: help is modal, preserves question-mark typing and closes before
   await page.keyboard.press('Escape');
   await expect.poll(() => page.evaluate(() => document.fullscreenElement)).toBe(null);
   await input.focus();
-  const exported = await downloadWith(page, () => page.keyboard.press('Control+s'));
+  const exported = await downloadWith(page, () => page.keyboard.press('Control+Shift+s'));
   expect(exported.text).toContain('?가나다');
   expect(exported.text).not.toContain('도움말중입력금지');
 });
@@ -178,7 +229,7 @@ test('shortcuts: composition and legacy 229 keys cannot open or save before Kore
   } finally { await cdp.detach(); }
   expect(actions).toEqual([]);
   await expect(page.locator('#saved-list .saved-open')).toHaveCount(0);
-  const exported = await downloadWith(page, () => page.keyboard.press('Control+s'));
+  const exported = await downloadWith(page, () => page.keyboard.press('Control+Shift+s'));
   expect(exported.text).toContain('한글가나다');
   expect(exported.text).not.toContain('한한');
 });

@@ -82,7 +82,7 @@ $('toggle-fullscreen').onclick = async () => {
     else if (supportsFullscreen()) await $('drop-zone').requestFullscreen();
     else setFallbackExpanded(true);
   } catch { error('전체화면으로 전환하지 못했습니다. 브라우저 설정을 확인하거나 다시 시도해 주세요.'); }
-  finally { fullscreenPending = false; syncFullscreen(); }
+  finally { fullscreenPending = false; syncFullscreen(); resumeEditorInput(editor, $('toggle-fullscreen')); }
 };
 
 document.addEventListener('fullscreenchange', () => { syncFullscreen(); refitExpandedPage(); });
@@ -314,6 +314,7 @@ async function refreshSaved() {
 $('save-local').onclick = async () => {
   if (!current || busy) return;
   const snapshot = current;
+  const activeEditor = editing ? editor : null;
   setBusy(true, '편집한 문서를 기기에 저장하고 있습니다…', true);
   try {
     const exported = editor ? await exportDocument() : null;
@@ -327,7 +328,7 @@ $('save-local').onclick = async () => {
     await refreshSaved();
     status('현재 문서를 이 브라우저에 저장했습니다. 서버로 전송하지 않았습니다.');
   } catch (e) { error(`기기에 저장하지 못했습니다. ${e.message}`); }
-  finally { setBusy(false); }
+  finally { setBusy(false); resumeEditorInput(activeEditor, $('save-local')); }
 };
 
 $('clear-saved').onclick = async () => {
@@ -411,6 +412,17 @@ function downloadBlob(blob, name) {
 }
 
 function hwpName(name) { return name.replace(/\.(hwp|hwpx)$/i, '') + '.hwp'; }
+
+// Export temporarily makes the iframe inert. Return focus without changing the
+// engine's cursor/selection, unless the user moved to another control or dialog.
+function resumeEditorInput(instance, trigger) {
+  if (!instance || editor !== instance || !editing || busy || $('shortcuts-dialog').open) return;
+  const doc = instance.element.contentDocument;
+  if (!doc || doc.querySelector('.modal-overlay, .cp-overlay, .find-dialog')) return;
+  const active = document.activeElement;
+  if (active && ![document.body, document.documentElement, instance.element, trigger].includes(active)) return;
+  doc.querySelector('textarea[aria-label="문서 편집 입력"]')?.focus({ preventScroll: true });
+}
 
 function destroyEditor() {
   clearInterval(dirtyTimer); dirtyTimer = null;
@@ -514,12 +526,12 @@ $('edit-document').onclick = async () => {
     $('edit-document').setAttribute('aria-pressed', String(editing));
     await updateDirty();
     if (!editing) fitPage();
-    status(editing ? '문서를 클릭해 편집하세요. HWP 저장 또는 Ctrl+S로 내려받을 수 있습니다.' : '편집 내용이 반영된 미리보기입니다. 저장하지 않은 내용은 HWP 저장을 눌러 보관하세요.');
+    status(editing ? 'Ctrl/⌘+S로 기기에 저장하고, Ctrl/⌘+Shift+S로 HWP 파일을 내려받습니다.' : '편집 내용이 반영된 미리보기입니다. 기기에 저장하거나 HWP 파일을 내려받아 보관하세요.');
   } catch (e) {
     if (token !== generation) return;
     if (!editing) destroyEditor();
     error(`편집 화면을 전환하지 못했습니다. ${e.message}`);
-  } finally { if (token === generation) setBusy(false); }
+  } finally { if (token === generation) { setBusy(false); resumeEditorInput(editor, $('edit-document')); } }
 };
 
 async function exportDocument() {
@@ -565,6 +577,7 @@ async function markSaved(artifact) {
 $('download-hwp').onclick = async () => {
   if (!current || busy) return;
   const snapshot = current;
+  const activeEditor = editing ? editor : null;
   setBusy(true, 'HWP 파일을 만들고 다시 열 수 있는지 확인하고 있습니다…', true);
   try {
     const artifact = await exportDocument();
@@ -574,5 +587,5 @@ $('download-hwp').onclick = async () => {
     await markSaved(artifact);
     status(`${name} 다운로드를 시작했습니다. 파일은 서버로 전송되지 않았습니다.`);
   } catch (e) { error(`HWP로 저장하지 못했습니다. 편집 내용은 유지됩니다. ${e.message}`); }
-  finally { setBusy(false); }
+  finally { setBusy(false); resumeEditorInput(activeEditor, $('download-hwp')); }
 };

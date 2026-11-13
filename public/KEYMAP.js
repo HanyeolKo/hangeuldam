@@ -1,3 +1,5 @@
+import { EDITING_KEYMAP } from './editing-keys.js';
+
 // A single map for keyboard bindings, help, and touch actions. No device-specific keys.
 // Mod means Ctrl or Command. Use physical codes so Korean layouts work as well.
 // handler names resolve only through the local action registry in shortcuts.js.
@@ -9,8 +11,8 @@ const editor = (id, label, group, command, keys, extra = {}) => host(id, label, 
 
 export const KEYMAP = Object.freeze([
   host('file.open', '파일 열기', '파일', 'global', 'open', [mod('KeyO')]),
-  host('file.download', 'HWP 파일 다운로드', '파일', 'document', 'download', [mod('KeyS')]),
-  host('file.local', '이 브라우저에 기기 저장', '파일', 'document', 'local', [mod('KeyS', { shift: true })]),
+  host('file.download', 'HWP 파일 다운로드', '파일', 'document', 'download', [mod('KeyS', { shift: true })]),
+  host('file.local', '이 브라우저에 기기 저장', '파일', 'document', 'local', [mod('KeyS')]),
   host('file.original', '원본 파일 다운로드', '파일', 'document', 'original', [alt('KeyO', { shift: true })]),
   host('file.close', '문서 닫기', '파일', 'document', 'close', [mod('KeyX', { shift: true })]),
   host('view.edit', '편집 · 읽기 전환', '화면', 'document', 'edit', [mod('KeyE', { shift: true })]),
@@ -50,23 +52,32 @@ export const KEYMAP = Object.freeze([
   editor('format.lineIncrease', '줄 간격 늘리기', '문단 서식', 'format:line-spacing-increase', [alt('KeyZ', { shift: true })]),
   editor('format.lineDecrease', '줄 간격 줄이기', '문단 서식', 'format:line-spacing-decrease', [alt('KeyA', { shift: true })]),
   editor('page.break', '쪽 나누기', '문단 서식', 'page:break', [mod('Enter')]),
+  ...EDITING_KEYMAP,
 ]);
 
-const codeLabels = { Equal: '+', Minus: '−', NumpadAdd: '+', NumpadSubtract: '−', Digit0: '0', BracketRight: ']', BracketLeft: '[', Slash: '/', PageUp: 'Page Up', PageDown: 'Page Down', Enter: 'Enter', Home: 'Home', End: 'End' };
+const codeLabels = { Equal: '+', Minus: '−', NumpadAdd: '+', NumpadSubtract: '−', Digit0: '0', BracketRight: ']', BracketLeft: '[', Slash: '/', PageUp: 'Page Up', PageDown: 'Page Down', Enter: 'Enter', Home: 'Home', End: 'End', ArrowLeft: '←', ArrowRight: '→', ArrowUp: '↑', ArrowDown: '↓', Backspace: 'Backspace', Delete: 'Delete', Tab: 'Tab', Insert: 'Insert' };
 const koreanCodes = { 'ㅐ': 'KeyO', 'ㄴ': 'KeyS', 'ㅌ': 'KeyX', 'ㄷ': 'KeyE', 'ㄹ': 'KeyF', 'ㅅ': 'KeyT', 'ㅋ': 'KeyZ', 'ㅛ': 'KeyY', 'ㅁ': 'KeyA', 'ㅊ': 'KeyC', 'ㅠ': 'KeyB', 'ㅑ': 'KeyI', 'ㅕ': 'KeyU', 'ㅣ': 'KeyL', 'ㅗ': 'KeyH', 'ㅡ': 'KeyM' };
 function codeFor(event) {
   if (event.code) return event.code;
   const value = String(event.key || '').toLowerCase();
   if (/^[a-z]$/.test(value)) return `Key${value.toUpperCase()}`;
-  return koreanCodes[value] || { '+': 'Equal', '=': 'Equal', '-': 'Minus', '0': 'Digit0', '[': 'BracketLeft', ']': 'BracketRight', '/': 'Slash', pageup: 'PageUp', pagedown: 'PageDown', home: 'Home', end: 'End', enter: 'Enter', f1: 'F1', f2: 'F2', f3: 'F3' }[value] || event.key;
+  return koreanCodes[value] || { '+': 'Equal', '=': 'Equal', '-': 'Minus', '0': 'Digit0', '[': 'BracketLeft', ']': 'BracketRight', '/': 'Slash', pageup: 'PageUp', pagedown: 'PageDown', home: 'Home', end: 'End', enter: 'Enter', arrowleft: 'ArrowLeft', arrowright: 'ArrowRight', arrowup: 'ArrowUp', arrowdown: 'ArrowDown', backspace: 'Backspace', delete: 'Delete', tab: 'Tab', insert: 'Insert', f1: 'F1', f2: 'F2', f3: 'F3' }[value] || event.key;
 }
 
-export function matchKeymap(event) {
+function bindingMatches(binding, event, code) {
+  const mac = /Mac|iPhone|iPad|iPod/i.test(globalThis.navigator?.platform || '') || /Macintosh|iPhone|iPad|iPod/i.test(globalThis.navigator?.userAgent || '');
+  if (binding.platform === 'mac' && !mac || binding.platform === 'other' && mac) return false;
+  const primary = binding.mod ? Boolean(event.ctrlKey || event.metaKey)
+    : Boolean(binding.ctrl) === Boolean(event.ctrlKey) && Boolean(binding.meta) === Boolean(event.metaKey);
+  return binding.code === code && primary && Boolean(binding.shift) === Boolean(event.shiftKey) && Boolean(binding.alt) === Boolean(event.altKey);
+}
+
+export function matchKeymap(event, accepts = () => true) {
   if (event.isComposing || event.keyCode === 229 || event.getModifierState?.('AltGraph')) return null;
   const code = codeFor(event);
-  return KEYMAP.find(entry => entry.keys.some(binding => binding.code === code && Boolean(binding.mod) === Boolean(event.ctrlKey || event.metaKey) && Boolean(binding.shift) === Boolean(event.shiftKey) && Boolean(binding.alt) === Boolean(event.altKey))) || null;
+  return KEYMAP.find(entry => accepts(entry) && entry.keys.some(binding => bindingMatches(binding, event, code))) || null;
 }
 
 export function keyLabels(binding) {
-  return [binding.mod && 'Ctrl / ⌘', binding.alt && 'Alt / ⌥', binding.shift && 'Shift', codeLabels[binding.code] || binding.code.replace(/^Key/, '')].filter(Boolean);
+  return [binding.mod && 'Ctrl / ⌘', binding.ctrl && 'Ctrl', binding.meta && '⌘', binding.alt && (binding.platform === 'mac' ? '⌥ Option' : 'Alt / ⌥'), binding.shift && 'Shift', codeLabels[binding.code] || binding.code.replace(/^Key/, '')].filter(Boolean);
 }

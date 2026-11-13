@@ -39,6 +39,7 @@ export function createShortcuts({ getState, getEditor, isFullscreen, leaveFullsc
     if (entry.id === 'file.open') return !state.operationLocked;
     if (state.busy || !state.current) return false;
     if (entry.scope === 'reader' && state.editing) return false;
+    if (entry.nativeEditing) return false; // Native editing requires the original trusted key event.
     if (entry.scope === 'editor') return state.editing && Boolean(automation()?.isEnabled(entry.command));
     if (entry.id === 'page.previous') return !$('prev-page').disabled;
     if (entry.id === 'page.next') return !$('next-page').disabled;
@@ -68,11 +69,12 @@ export function createShortcuts({ getState, getEditor, isFullscreen, leaveFullsc
       // Equivalent numpad/plus bindings need not duplicate the same help label.
       const displayed = new Set();
       for (const binding of entry.keys) {
-        const tokens = keyLabels(binding), text = tokens.join('+');
+        const tokens = keyLabels(binding), text = `${binding.platform || ''}:${tokens.join('+')}`;
         if (displayed.has(text)) continue;
         if (displayed.size) bindings.append(document.createTextNode(' / '));
         displayed.add(text);
         const chord = document.createElement('span'); chord.className = 'shortcut-chord';
+        if (binding.platform === 'mac') { const platform = document.createElement('span'); platform.className = 'shortcut-platform'; platform.textContent = 'Mac: '; chord.append(platform); }
         tokens.forEach((token, index) => {
           if (index) chord.append(document.createTextNode(' + '));
           const key = document.createElement('kbd'); key.textContent = token; chord.append(key);
@@ -81,7 +83,7 @@ export function createShortcuts({ getState, getEditor, isFullscreen, leaveFullsc
       }
       const run = document.createElement('button'); run.type = 'button'; run.className = 'shortcut-run';
       run.textContent = '실행'; run.setAttribute('aria-label', `${entry.label} 실행`); run.disabled = !enabled(entry);
-      if (entry.id === 'help.shortcuts' || entry.nativeKeyboard) run.hidden = true;
+      if (entry.id === 'help.shortcuts' || entry.nativeKeyboard || entry.nativeEditing) run.hidden = true;
       run.addEventListener('click', () => {
         // Close and remove inert synchronously to preserve the user's clipboard/file-picker gesture.
         restoreFocus = false; dialog.close(); $('editor-host').inert = getState().busy;
@@ -89,6 +91,7 @@ export function createShortcuts({ getState, getEditor, isFullscreen, leaveFullsc
       });
       description.append(bindings, run);
       if (entry.nativeKeyboard) { const note = document.createElement('small'); note.textContent = '키보드 또는 브라우저 메뉴 사용'; description.append(note); }
+      if (entry.nativeEditing) { const note = document.createElement('small'); note.textContent = entry.note || '편집 영역에서 키보드로 사용'; description.append(note); }
       row.append(term, description); list.append(row);
     }
   }
@@ -105,17 +108,18 @@ export function createShortcuts({ getState, getEditor, isFullscreen, leaveFullsc
   dialog.addEventListener('cancel', event => { event.preventDefault(); dialog.close(); });
   dialog.addEventListener('close', () => {
     $('editor-host').inert = getState().busy;
-    if (restoreFocus && invoker?.isConnected) invoker.focus({ preventScroll: true });
+    if (restoreFocus && getState().editing && !getState().busy && !frame()?.contentDocument?.querySelector('.modal-overlay, .cp-overlay, .find-dialog')) input()?.focus({ preventScroll: true });
+    else if (restoreFocus && invoker?.isConnected) invoker.focus({ preventScroll: true });
   });
-  $('shortcuts-intro').textContent = `${KEYMAP.length}개 명령 · PC·모바일·태블릿 모두 같은 단축키를 사용합니다. Ctrl 또는 ⌘ Command를 누르세요. 키보드가 없으면 ‘실행’을 눌러 사용할 수 있습니다.`;
+  $('shortcuts-intro').textContent = `${KEYMAP.length}개 명령 · PC·모바일·태블릿 모두 같은 단축키를 사용합니다. ⌘·⌥ 표시는 Mac 키 조합입니다. 기본 이동·선택 키도 아래에서 확인하세요. 실행 버튼이 있는 명령은 터치로도 사용할 수 있습니다.`;
   dialog.querySelector('.shortcuts-note').textContent = '편집 명령은 편집 영역에 커서를 둔 상태에서 사용합니다. 회색 실행 버튼은 현재 상태에서 사용할 수 없는 명령입니다. 복사·잘라내기·붙여넣기는 키보드 또는 브라우저 메뉴를 사용하며 클립보드 권한이 필요할 수 있습니다. 한글 조합 중에는 단축키를 실행하지 않습니다. Esc는 열린 대화상자를 먼저 닫고, 다음에 전체화면을 종료합니다.';
 
   function handle(event) {
     if (event.isComposing || event.keyCode === 229 || event.getModifierState?.('AltGraph')) return false;
-    const entry = matchKeymap(event);
+    const entry = matchKeymap(event, entry => entry.scope !== 'reader' || !getState().editing);
     const consume = () => { event.preventDefault(); event.stopImmediatePropagation(); };
     if (dialog.open) {
-      if ((entry && !entry.nativeKeyboard && entry.id !== 'edit.selectAll') || event.key === 'Escape') { consume(); if (event.key === 'Escape') dialog.close(); }
+      if ((entry && !entry.nativeKeyboard && !entry.nativeEditing && entry.id !== 'edit.selectAll') || event.key === 'Escape') { consume(); if (event.key === 'Escape') dialog.close(); }
       return true;
     }
     const source = event.target?.ownerDocument || document;
@@ -136,7 +140,7 @@ export function createShortcuts({ getState, getEditor, isFullscreen, leaveFullsc
     const editorInput = fromEditor && target === input();
     if (entry.scope === 'reader' && (typing || getState().editing)) return false;
     if (entry.scope === 'editor' && (!fromEditor || !getState().editing || (typing && !editorInput))) return false;
-    if (entry.nativeKeyboard) return false;
+    if (entry.nativeKeyboard || entry.nativeEditing) return false;
     consume();
     if (!event.repeat) execute(entry);
     return true;
