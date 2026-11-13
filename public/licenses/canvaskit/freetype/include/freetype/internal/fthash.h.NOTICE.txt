@@ -1,0 +1,9 @@
+Unmodified opening copyright/license comment from include/freetype/internal/fthash.h
+
+/****************************************************************************
+ *
+ * fthash.h
+ *
+ *   Hashing functions (specification).
+ *
+ */

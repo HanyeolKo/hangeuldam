@@ -1,0 +1,464 @@
+{
+  "upstream": "https://github.com/edwardkim/rhwp",
+  "tag": "v0.9.0",
+  "commit": "c9095c5f67632e6721e800ccc7fb43ea49d26682",
+  "corePackage": "@rhwp/core@0.9.0",
+  "sdkPackage": "@rhwp/editor@0.9.0",
+  "node": "22.23.5",
+  "vite": "8.3.5",
+  "buildFlags": {
+    "RHWP_WITHOUT_AI": "1",
+    "RHWP_WITHOUT_HWPCTRL": "1",
+    "RHWP_DISABLE_EXTERNAL_WEBFONTS": "1",
+    "HANGEULDAM_EMBED": "1"
+  },
+  "patch": "hangeuldam-studio.patch",
+  "base": "./",
+  "totalBytes": 69427235,
+  "files": [
+    {
+      "path": "assets/canvaskit-SCAxUyCS.wasm",
+      "bytes": 7317345,
+      "sha256": "25ebed8e60158c5854f8dc807b936daca21354f8bfb6a2231266b0a93812f301"
+    },
+    {
+      "path": "assets/canvaskit-renderer-BGYj76IQ.js",
+      "bytes": 338428,
+      "sha256": "9eace3b3d8db798323a285a274f595a5df27a589efec55a3ddb589036e4e3cdd"
+    },
+    {
+      "path": "assets/form-action-worker-BEckcfC_.js",
+      "bytes": 10795,
+      "sha256": "e68b32663d978b49e2825b7d9068862bc58a28260f5fb66602734b2941a63b4c"
+    },
+    {
+      "path": "assets/import-worker-F1kLRbfo.js",
+      "bytes": 148104,
+      "sha256": "44a4ccb9c90356a158490a0d30ac88f8528406188e3dd7138fce9396963fc42e"
+    },
+    {
+      "path": "assets/index-CzQiCwp0.js",
+      "bytes": 2323285,
+      "sha256": "ea9457c610ac0706f14eeb030ab6afde4b6a03ec110fa113bba7e1075f123dac"
+    },
+    {
+      "path": "assets/index-D5p1MSHQ.css",
+      "bytes": 118864,
+      "sha256": "0b114e3d24fe1d43253f5866dd24754f677f309c619c657b9ca99b0cf1221b88"
+    },
+    {
+      "path": "assets/rhwp_bg-B5Jf95sq.wasm",
+      "bytes": 26835482,
+      "sha256": "c3b0632b84881f81f2c80be7c2f9e44a4086cb01e05a6a9107a3b3c6350abc1d"
+    },
+    {
+      "path": "favicon.ico",
+      "bytes": 911,
+      "sha256": "136d51c3d0a12bc67352964998fa78a5dcf2702873f73eb261990f9e20eb0ade"
+    },
+    {
+      "path": "fonts/Cafe24Ssurround-v2.0.woff2",
+      "bytes": 391868,
+      "sha256": "2d726dbf8863d66e6d5cf56e2532c5d14d8a4b514461b565c513c1da6ae2f41a"
+    },
+    {
+      "path": "fonts/Cafe24Supermagic-Regular-v1.0.woff2",
+      "bytes": 765684,
+      "sha256": "65434a217b9532867a1fe41417d0ad51210a60027a51dca40748aafed48ef0ba"
+    },
+    {
+      "path": "fonts/D2Coding-Bold.woff2",
+      "bytes": 1579776,
+      "sha256": "cf59ac9e719ce9888870ec012cdf8cbc8ffdb632f823652d5b3ba3236ce6b7c8"
+    },
+    {
+      "path": "fonts/D2Coding-Regular.woff2",
+      "bytes": 1485480,
+      "sha256": "4d3fa8ed66fedcb1787f200bd75637b816b09057fc06da0aa783e3b305a726d8"
+    },
+    {
+      "path": "fonts/FONTS.md",
+      "bytes": 11059,
+      "sha256": "1b8973e8e66417a434427c0d34bfd7f9089298389a1c45dd29bec8ee67f424a8"
+    },
+    {
+      "path": "fonts/GowunBatang-Bold.woff2",
+      "bytes": 447856,
+      "sha256": "aef1b91ea9ea4688fb296044959b38dfeeaa3e1650af5d543a2b5c160fa30b36"
+    },
+    {
+      "path": "fonts/GowunBatang-Regular.woff2",
+      "bytes": 495092,
+      "sha256": "0c6a288aa0c12081dccde769c312f71f290b353243747dd24fb8c57f94f01d72"
+    },
+    {
+      "path": "fonts/GowunDodum-Regular.woff2",
+      "bytes": 406476,
+      "sha256": "349c098a6181952dab564bf891b8efcacfbf855adc28d40b4aa2e5937c101c56"
+    },
+    {
+      "path": "fonts/Happiness-Sans-Bold.woff2",
+      "bytes": 336604,
+      "sha256": "54becdfd4f7f58e872eba8fbc67778e29cff94c1cd03f9a0ebadfbe482b4aba0"
+    },
+    {
+      "path": "fonts/Happiness-Sans-Regular.woff2",
+      "bytes": 291556,
+      "sha256": "4fc37e7663c3d440b5a6af6938bde0c6618b666553ed521745f3362050bd4988"
+    },
+    {
+      "path": "fonts/Happiness-Sans-Title.woff2",
+      "bytes": 348700,
+      "sha256": "057e6821a062d9192964d99cf058fe6608230e9e4a464c9652b3756e02460e22"
+    },
+    {
+      "path": "fonts/HappinessSansVF.woff2",
+      "bytes": 613412,
+      "sha256": "cd29de60acf8c466938400561fcbfb14812dd5981f4f78b0c8da74609682423c"
+    },
+    {
+      "path": "fonts/LatinModernMath-GUST-FONT-LICENSE.txt",
+      "bytes": 1449,
+      "sha256": "e120f067589d589a9fa436db09940bd2e03b477cf29b15443c6f87d3861f734b"
+    },
+    {
+      "path": "fonts/LatinModernMath-Regular.woff2",
+      "bytes": 391676,
+      "sha256": "b11060f37967c090457580275129d0d7da1d5fbfc82b04e78c91aa31977f547c"
+    },
+    {
+      "path": "fonts/LatinModernMath-VariableOutline-subset.otf",
+      "bytes": 13488,
+      "sha256": "c3b70b3a6ad5d7b03fb9c86067b6fc212b3a084870a9acff13238190137bf260"
+    },
+    {
+      "path": "fonts/MANIFEST-RHWP-LMM-VariableOutline.txt",
+      "bytes": 1198,
+      "sha256": "c67672523217a4c4765e4f04ddc816ba155614260b98836bce82f2b47b646daf"
+    },
+    {
+      "path": "fonts/NanumGothic-Bold.woff2",
+      "bytes": 440012,
+      "sha256": "f1a3a97599e73746b1af08f88bc542c0f6b091818ffa67b31efb5b88d49ebc2e"
+    },
+    {
+      "path": "fonts/NanumGothic-ExtraBold.woff2",
+      "bytes": 402288,
+      "sha256": "a1961b5f8820d1c03519e21858508bedd32ea9f748805db5cad11536404c1801"
+    },
+    {
+      "path": "fonts/NanumGothic-Regular.woff2",
+      "bytes": 363844,
+      "sha256": "b2b25ce9c9179e0a4c867bd2610e1db5595965345aa1cdb857964ab802c4ee3e"
+    },
+    {
+      "path": "fonts/NanumGothicCoding-Bold.woff2",
+      "bytes": 698148,
+      "sha256": "81c3ae9d714c4b31fb0fac7596e4a472e1a19776193a4a595e6f7e5b23daeeb3"
+    },
+    {
+      "path": "fonts/NanumGothicCoding-Regular.woff2",
+      "bytes": 670036,
+      "sha256": "6bd0831252dc3bd96f3257ec4eaf794d88ffb185346eb5d3f889248a7a3c6239"
+    },
+    {
+      "path": "fonts/NanumMyeongjo-Bold.woff2",
+      "bytes": 608768,
+      "sha256": "65c47ec072dd91cbaac538f4482be3185fb0896b5f3909aa8a9834604b1eec08"
+    },
+    {
+      "path": "fonts/NanumMyeongjo-ExtraBold.woff2",
+      "bytes": 728364,
+      "sha256": "dda2e9b5d670b63dd66a9a83468ee0ee9e64bef09d4fc24771865a7ab2529332"
+    },
+    {
+      "path": "fonts/NanumMyeongjo-Regular.woff2",
+      "bytes": 536732,
+      "sha256": "52d27bf4ee205020a4aa9eb19ef4835e4aa04a94f7742b13e69e5c8b9a74072a"
+    },
+    {
+      "path": "fonts/NotoSansKR-Bold.woff2",
+      "bytes": 559192,
+      "sha256": "dab3d492daa687386292cff1499225db580f931f800ee0d124eb0636378c6020"
+    },
+    {
+      "path": "fonts/NotoSansKR-ExtraLight.woff2",
+      "bytes": 592496,
+      "sha256": "3b5cac6af73fd94fa91ded10f6cfc54c7ce52189986fe7ca6fd457208f1d3673"
+    },
+    {
+      "path": "fonts/NotoSansKR-Regular.woff2",
+      "bytes": 562220,
+      "sha256": "d1bf8649914a4fe9477a8735bf056383e44e466141fb3d61897252e06d900c1a"
+    },
+    {
+      "path": "fonts/NotoSansMath-OFL.txt",
+      "bytes": 4103,
+      "sha256": "4fbd190167f23b4c0e2368160f412bf2d1fade887b78b6aec66689ce31698e8b"
+    },
+    {
+      "path": "fonts/NotoSansMath-Regular.woff2",
+      "bytes": 226456,
+      "sha256": "6836027b99d29fd0e6f668cf0c2e89107de4131b91116cd96516ad4a7e19d66d"
+    },
+    {
+      "path": "fonts/NotoSansSymbols2-OFL.txt",
+      "bytes": 5208,
+      "sha256": "075f91382875da1c4b491f1facf2586f55448705133264d98ce15cab6211b125"
+    },
+    {
+      "path": "fonts/NotoSansSymbols2-Regular.ttf",
+      "bytes": 656852,
+      "sha256": "876598db5f1e3bef2bc77c4d94c5b0d5d2c1620be4878a06f18fb5434e331688"
+    },
+    {
+      "path": "fonts/NotoSerifKR-Bold.woff2",
+      "bytes": 1033556,
+      "sha256": "504d6af6abb882acd912d47bafa383c4512a6c8c33635e4e8fb37111d9310941"
+    },
+    {
+      "path": "fonts/NotoSerifKR-Regular.woff2",
+      "bytes": 971428,
+      "sha256": "c9a1e3ac69994d680883b53b1fd83d520733b704792522a932bfaa276117de45"
+    },
+    {
+      "path": "fonts/Pretendard-Black.woff2",
+      "bytes": 800404,
+      "sha256": "c5fd0c3568fc1368a3edc0d0fbb36df029935954276e3573451b3bae09e27296"
+    },
+    {
+      "path": "fonts/Pretendard-Bold.woff2",
+      "bytes": 791156,
+      "sha256": "4609c3356e536fafe38f4add0daeceb3d8595d3057bce13c428c33ddbd43d362"
+    },
+    {
+      "path": "fonts/Pretendard-ExtraBold.woff2",
+      "bytes": 793540,
+      "sha256": "dd7c1e156f508eb962acc7a33a7a1896d1e0b71e11156fad96e731689ceb6dc3"
+    },
+    {
+      "path": "fonts/Pretendard-ExtraLight.woff2",
+      "bytes": 734392,
+      "sha256": "df43dc9165dff4542114674bcd8b79b7daae6dec004004586d5d076fec6fe2aa"
+    },
+    {
+      "path": "fonts/Pretendard-Light.woff2",
+      "bytes": 757000,
+      "sha256": "b7426635cce2ea2b95c9c802e43fba1c620e0dafaf25f737c069b8b4e09fa841"
+    },
+    {
+      "path": "fonts/Pretendard-Medium.woff2",
+      "bytes": 778432,
+      "sha256": "d03481330eeba0659ab5b87f25ceb504a35de377dd90a0d0aba2982eb2d05e2c"
+    },
+    {
+      "path": "fonts/Pretendard-Regular.woff2",
+      "bytes": 765892,
+      "sha256": "fad853f7f47c6c8b103171e7193fa095708cdcd70850a71d93aa5379e8a61d63"
+    },
+    {
+      "path": "fonts/Pretendard-SemiBold.woff2",
+      "bytes": 785856,
+      "sha256": "c863f76a7de5c1ddc1ed8b2fa794964530774592c4f31407a84e2a2ae93f17f0"
+    },
+    {
+      "path": "fonts/Pretendard-Thin.woff2",
+      "bytes": 694804,
+      "sha256": "1539755224a64719d5b18406762c476db74fcc299b9e4641ca1e9812fbc7a09b"
+    },
+    {
+      "path": "fonts/RHWPOldHangul-Regular.woff2",
+      "bytes": 239732,
+      "sha256": "1a45a61e9a320c1bc62ca1401f7b23ceffffe8133dc2a9650ad4e12524f8dcab"
+    },
+    {
+      "path": "fonts/RHWPPublicBatang-Regular.woff2",
+      "bytes": 2832012,
+      "sha256": "20d454f45cdf29cc4619e769f1f59f3b8920941b6b274a530e82d3b75e24dbfb"
+    },
+    {
+      "path": "fonts/SourceHanSerifK-OFL.txt",
+      "bytes": 4463,
+      "sha256": "9ff5bb567e1b92c801fc1069e5fbf992ff8efccacb9db94e5959a5b3ba9bb903"
+    },
+    {
+      "path": "fonts/SpoqaHanSans-Regular.woff2",
+      "bytes": 275144,
+      "sha256": "6568bf80b50c14f2e54f56f2c07e668416f39f880baf5ea2825d315767f98f69"
+    },
+    {
+      "path": "fonts/enclosed-pua-metrics.json",
+      "bytes": 2412,
+      "sha256": "c2b3049172cf20f9065506b51804b0e12f08af98ab5c364a050c2f0e2f4902a1"
+    },
+    {
+      "path": "fonts/licenses/Cafe24Ssurround-LICENSE.pdf",
+      "bytes": 1945706,
+      "sha256": "de2158b3dc8aa27513451108fb09088f9afd8fce1d65c2cac29c7e554b37a7d9"
+    },
+    {
+      "path": "fonts/licenses/Cafe24Supermagic-LICENSE.pdf",
+      "bytes": 1944287,
+      "sha256": "bdf5e278410f73faaf5a34db9ad4ce328cabd673d8f699bd986869a690193511"
+    },
+    {
+      "path": "fonts/licenses/D2Coding-OFL.txt",
+      "bytes": 4511,
+      "sha256": "1807e8dec4d65f474cbf9be39f5e2254ecb81702babc320749e272ea66ffcc69"
+    },
+    {
+      "path": "fonts/licenses/GowunBatang-OFL.txt",
+      "bytes": 4397,
+      "sha256": "49a57cc769fa9affd6eefb9070a61e3d3f6b757c97cafb15848bc6d1c81acc78"
+    },
+    {
+      "path": "fonts/licenses/GowunDodum-OFL.txt",
+      "bytes": 4395,
+      "sha256": "a7c73f9521cd646bbdfb6684c99a62311bbd7bce11898dc11ef0b3c69eda1aca"
+    },
+    {
+      "path": "fonts/licenses/HappinessSans-LICENSE.pdf",
+      "bytes": 194608,
+      "sha256": "f5bd344131ee034f3425517ea376ab6acea9126310e7b2cd74cd18673991b055"
+    },
+    {
+      "path": "fonts/licenses/LPPL-1.3c.txt",
+      "bytes": 19102,
+      "sha256": "3d262cdf34dafa6955f703c634a8c238ec44109bc8dd6ef34fb7aa54809f7e66"
+    },
+    {
+      "path": "fonts/licenses/LatinModernMath-GUST-FONT-LICENSE.txt",
+      "bytes": 1377,
+      "sha256": "49ea6cb9257bbee0a3979c48a774cd221550ac1c20c95549efe45fc99cc18050"
+    },
+    {
+      "path": "fonts/licenses/NanumGothic-OFL.txt",
+      "bytes": 4534,
+      "sha256": "eeacf16032901d0ed0456876ec77b8f0fda6b3fecec7d972f8543eb602e6c30f"
+    },
+    {
+      "path": "fonts/licenses/NanumGothicCoding-OFL.txt",
+      "bytes": 4534,
+      "sha256": "eeacf16032901d0ed0456876ec77b8f0fda6b3fecec7d972f8543eb602e6c30f"
+    },
+    {
+      "path": "fonts/licenses/NanumMyeongjo-OFL.txt",
+      "bytes": 4497,
+      "sha256": "8eb1c1019fe7fe6d0b6e7d7bbbba1d9cbdd969d8c5f26455708f6cfb8a77284c"
+    },
+    {
+      "path": "fonts/licenses/NotoCJKSerif-OFL.txt",
+      "bytes": 4301,
+      "sha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2"
+    },
+    {
+      "path": "fonts/licenses/NotoSansKR-OFL.txt",
+      "bytes": 4388,
+      "sha256": "1c05c68c34f9708415aada51f17e1b0092d2cea709bf4a94cd38114f9e73d7d9"
+    },
+    {
+      "path": "fonts/licenses/NotoSansMath-OFL.txt",
+      "bytes": 4103,
+      "sha256": "4fbd190167f23b4c0e2368160f412bf2d1fade887b78b6aec66689ce31698e8b"
+    },
+    {
+      "path": "fonts/licenses/NotoSansSymbols2-OFL.txt",
+      "bytes": 5208,
+      "sha256": "075f91382875da1c4b491f1facf2586f55448705133264d98ce15cab6211b125"
+    },
+    {
+      "path": "fonts/licenses/Pretendard-OFL.txt",
+      "bytes": 4816,
+      "sha256": "82e9c8a4b203261f10ddba1296422d64914ff3d4b7bd8a12896d03f0f088d70a"
+    },
+    {
+      "path": "fonts/licenses/README.md",
+      "bytes": 6339,
+      "sha256": "a577ccb2a4ff374e388c9bfb5d360e0b62e3cfd6e8b09b43df601d8dd8605130"
+    },
+    {
+      "path": "fonts/licenses/RHWPPublicBatang-OFL.txt",
+      "bytes": 4398,
+      "sha256": "cc115f501827fffddcbf1ef86e5248ee55e40f0c3fb9725173b248ccc2d5df51"
+    },
+    {
+      "path": "fonts/licenses/SIL-OFL-1.1.txt",
+      "bytes": 4069,
+      "sha256": "f19c674290e5dc79f02e8efe16139ab56a06a7128876f5b1579ffd0db5bc897e"
+    },
+    {
+      "path": "fonts/licenses/SourceHanSerifK-OFL.txt",
+      "bytes": 4463,
+      "sha256": "9ff5bb567e1b92c801fc1069e5fbf992ff8efccacb9db94e5959a5b3ba9bb903"
+    },
+    {
+      "path": "fonts/licenses/SpoqaHanSans-OFL.txt",
+      "bytes": 4562,
+      "sha256": "279753543734e7a1846e3cb3f80d4dcdcc91f49c436411adaba82e3913c61cde"
+    },
+    {
+      "path": "fonts/licenses/font-notices.json",
+      "bytes": 39150,
+      "sha256": "6471f8a8b556352c1dc4af748cd118ba89a17d7c39cce72fc0049160039005e9"
+    },
+    {
+      "path": "icons/icon-128.png",
+      "bytes": 11851,
+      "sha256": "ce3047204dedd260b62b507ef1773ecfa1e68be1ddf08304a664fcb1341d502d"
+    },
+    {
+      "path": "icons/icon-192.png",
+      "bytes": 25440,
+      "sha256": "1180863b994272a7591043ecf0ae539de78c0f404eecad15b4e67b0315cbaf9c"
+    },
+    {
+      "path": "icons/icon-256.png",
+      "bytes": 36790,
+      "sha256": "b851d2271495a9858efd51def7615f68f2204417977672cde1da1ced53120ad0"
+    },
+    {
+      "path": "icons/icon-512.png",
+      "bytes": 131957,
+      "sha256": "25074cfb4bc9e9c543fd56504e4088741e4fe2b4927f36ab90741efa7947887a"
+    },
+    {
+      "path": "images/icon_small_ko.svg",
+      "bytes": 469618,
+      "sha256": "a0ac1200a41b6a75e9afb30cda5bb850276087d45c2f25870605888238ba9b39"
+    },
+    {
+      "path": "images/icon_small_ko_dark.svg",
+      "bytes": 451775,
+      "sha256": "9d02ea0b8c1d399a89290d97613759826f19f3e3f392b6d79dcf6109e7e15fa6"
+    },
+    {
+      "path": "index.html",
+      "bytes": 86968,
+      "sha256": "94b65e9f42c3ba907baf19d99b2d44a7607aaf0fd183d7ba5584c48f3c263337"
+    },
+    {
+      "path": "locale-init.js",
+      "bytes": 1342,
+      "sha256": "633d47a6a53b2211cf816769f8c084b097c1b60b6ab263803d8610c0531539fa"
+    },
+    {
+      "path": "print.html",
+      "bytes": 1436,
+      "sha256": "930907863afbafcc76099d386f6a995bc6c69387cb56838b18e4cdaf6eea6b79"
+    },
+    {
+      "path": "theme-init.js",
+      "bytes": 2783,
+      "sha256": "5a3afcc0139187bfe509414cd60fde2a0dfea72fd72751c4e6e696cdc0f6c587"
+    }
+  ],
+  "packagingOmissions": [
+    "samples/ (upstream test documents; not used in embed mode)",
+    "rhwp.js, rhwp.d.ts, rhwp_bg.wasm.d.ts (unused raw public copies; built chunks contain the pinned npm core)"
+  ],
+  "patchDetails": [
+    "preload local Pretendard/Nanum Gothic/Nanum Myeongjo/Nanum Gothic Coding before WASM measurement",
+    "add Korean faces before generic serif/sans-serif/monospace in shared font-family helper",
+    "prioritize host handler for all external link kinds"
+  ]
+}

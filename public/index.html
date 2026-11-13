@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content">
+  <meta name="theme-color" content="#216558">
+  <meta name="description" content="한글담 — PC·태블릿·모바일에서 HWP와 HWPX를 읽고 편집하는 오프라인 문서 편집기.">
+  <title>한글담 — 내 문서를, 어디서나.</title>
+  <link rel="icon" type="image/svg+xml" href="./icon.svg">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./fonts.css">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./device.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <svg class="svg-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 8V5a1 1 0 0 1 1-1h5l2 3h9a1 1 0 0 1 1 1v1M3 9h18l-2 11H5L3 9Z"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M12 16V4m-5 7 5 5 5-5M4 16v4h16v-4"/></symbol>
+    <symbol id="i-document" viewBox="0 0 24 24"><path d="M14 3H5v18h14V8l-5-5Zm0 0v5h5M8 12h8m-8 4h6"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+    <symbol id="i-fullscreen" viewBox="0 0 24 24"><path d="M9 3H3v6m12-6h6v6M3 15v6h6m12-6v6h-6"/></symbol>
+    <symbol id="i-fullscreen-exit" viewBox="0 0 24 24"><path d="M3 9h6V3m6 0v6h6M9 21v-6H3m18 0h-6v6"/></symbol>
+    <symbol id="i-fit" viewBox="0 0 24 24"><path d="M4 9V4h5m6 0h5v5m0 6v5h-5M9 20H4v-5M8 8h8v8H8z"/></symbol>
+    <symbol id="i-text" viewBox="0 0 24 24"><path d="M4 5h16M12 5v15M8 20h8"/></symbol>
+    <symbol id="i-device" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4m-4-11 3 3 5-5"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6l-8-3Zm-4 9 3 3 5-6"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+    <symbol id="i-keyboard" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M6 9h1m3 0h1m3 0h1m3 0h1M6 12h1m3 0h1m3 0h1m3 0h1M7 16h10"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v1"/></symbol>
+  </svg>
+
+  <header class="appbar">
+    <a class="brand" href="./" aria-label="한글담 홈">
+      <img src="./icon.svg" alt="" width="36" height="36">
+      <span>한글담<span class="brand-dot">.</span></span>
+    </a>
+    <span class="appbar-divider" aria-hidden="true"></span>
+    <p class="tagline">내 문서를, 어디서나.</p>
+    <div class="appbar-actions">
+      <span class="readonly-badge"><span aria-hidden="true"></span>오프라인 편집 <small>v0.3</small></span>
+      <button type="button" id="shortcuts-button" class="icon-button shortcut-help" aria-label="키보드 단축키" title="키보드 단축키" aria-haspopup="dialog" aria-controls="shortcuts-dialog"><svg class="icon" aria-hidden="true"><use href="#i-keyboard"/></svg></button>
+      <button type="button" id="open-file" aria-keyshortcuts="Control+O Meta+O" class="button primary compact"><svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg><span>파일 열기</span><kbd>Ctrl O</kbd></button>
+    </div>
+    <input id="file-input" type="file" accept=".hwp,.hwpx" hidden>
+  </header>
+
+  <div class="app-layout">
+    <aside class="sidebar" aria-label="내 기기에 저장한 문서">
+      <div class="sidebar-heading"><h2>내 문서함</h2><span class="local-label">이 브라우저</span></div>
+      <p class="sidebar-description">저장한 문서를 다시 열어보세요.</p>
+      <div id="saved-list" class="saved-list" aria-live="polite">
+        <div class="saved-empty"><svg class="icon" aria-hidden="true"><use href="#i-document"/></svg><p>아직 저장한 문서가 없어요.</p><span>문서를 연 뒤 ‘기기에 저장’을 누르면<br>이곳에서 다시 열 수 있습니다.</span></div>
+      </div>
+      <button id="clear-saved" type="button" class="text-button clear-saved" hidden>저장한 문서 모두 삭제</button>
+      <div class="sidebar-bottom">
+        <section class="offline-card" aria-labelledby="offline-title">
+          <div class="offline-heading"><span class="offline-icon"><svg class="icon" aria-hidden="true"><use href="#i-device"/></svg></span><h3 id="offline-title">인터넷 없이도 가볍게</h3></div>
+          <p id="offline-status" role="status">뷰어를 미리 저장하면 인터넷이 없는 환경에서도 사용할 수 있어요.</p>
+          <button id="offline-button" type="button" class="button secondary">오프라인 사용 준비<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+        </section>
+        <div class="local-privacy"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg><p>문서는 서버로 전송되지 않습니다.<br><span>편집 복구본도 이 브라우저에만 저장됩니다.</span></p></div>
+      </div>
+    </aside>
+
+    <main class="workspace" id="drop-zone" aria-label="문서 작업 공간. HWP 또는 HWPX 파일을 놓아 열 수 있습니다.">
+      <div id="error-banner" class="error-banner" role="alert" hidden><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><p id="error-message"></p><button type="button" id="dismiss-error" class="icon-button" aria-label="오류 안내 닫기"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+      <section id="empty-state" class="empty-state">
+        <div class="empty-topline"><span class="eyebrow">한글 문서 편집기</span><span class="supported-badge">HWP <span>·</span> HWPX</span></div>
+        <div class="welcome-content">
+          <div class="paper-illustration" aria-hidden="true">
+            <div class="paper-shadow"></div>
+            <div class="paper-sheet"><div class="paper-rule"></div><span class="paper-overline">HANGEULDAM</span><span class="paper-title">문서를 담다<span>.</span></span><div class="paper-lines"><i></i><i></i><i></i></div><div class="paper-table"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="paper-lines short"><i></i><i></i></div><span class="paper-number">01</span></div>
+            <span class="paper-chip"><svg class="icon" aria-hidden="true"><use href="#i-document"/></svg>.hwp</span>
+            <span class="paper-seal"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg></span>
+          </div>
+          <h1>한글 문서를 열어보세요</h1>
+          <p class="welcome-description">설치 없이, 내 브라우저에서.<br>여기에 파일을 놓거나 아래에서 선택하세요.</p>
+          <button type="button" id="choose-file" class="button primary choose-file"><svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg>내 기기에서 파일 선택</button>
+          <p class="file-hint">.hwp · .hwpx <span>최대 50 MB</span></p>
+          <button id="sample-button" type="button" class="sample-button">예제 문서로 둘러보기<svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></button>
+        </div>
+        <div class="welcome-footer"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><p>문서 읽기·편집·HWP 저장을 지원합니다. 일부 글꼴과 복잡한 서식은 원본과 다를 수 있습니다.</p></div>
+      </section>
+
+      <section id="document-view" class="document-view" aria-label="열린 문서" hidden>
+        <div class="document-heading">
+          <span class="document-file-icon"><svg class="icon" aria-hidden="true"><use href="#i-document"/></svg></span>
+          <div class="document-title"><h1 id="doc-name">문서</h1><p id="doc-meta"></p><span id="doc-state" class="doc-state">읽기 모드</span><p id="fullscreen-support" class="fullscreen-support" hidden>브라우저 상단은 유지하고 문서 영역을 화면 가득 확대합니다.</p></div>
+          <div class="document-actions"><button id="document-shortcuts" type="button" class="icon-button shortcut-help" aria-label="키보드 단축키" title="키보드 단축키" aria-haspopup="dialog" aria-controls="shortcuts-dialog"><svg class="icon" aria-hidden="true"><use href="#i-keyboard"/></svg></button><button id="toggle-fullscreen" type="button" class="button secondary compact" aria-label="전체화면" aria-pressed="false" title="전체화면"><svg class="icon" aria-hidden="true"><use id="fullscreen-icon" href="#i-fullscreen"/></svg><span id="fullscreen-label">전체화면</span></button><button id="edit-document" type="button" class="button secondary compact" aria-pressed="false">편집하기</button><button id="download-hwp" type="button" class="button primary compact" title="현재 문서를 HWP로 저장 (Ctrl/⌘+S)" aria-keyshortcuts="Control+S Meta+S">HWP 저장</button><button id="save-local" type="button" class="button secondary compact" title="기기에 저장 (Ctrl/⌘+Shift+S)" aria-keyshortcuts="Control+Shift+S Meta+Shift+S"><svg class="icon" aria-hidden="true"><use href="#i-device"/></svg><span>기기에 저장</span></button><button id="download-original" type="button" class="icon-button" title="원본 파일 다운로드" aria-label="원본 파일 다운로드"><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button><button id="close-document" type="button" class="icon-button" title="문서 닫기" aria-label="문서 닫기"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+        </div>
+        <nav class="document-toolbar" aria-label="문서 보기 도구">
+          <div class="toolbar-group page-navigation"><button id="prev-page" type="button" class="icon-button" aria-label="이전 쪽" title="이전 쪽"><svg class="icon rotate" aria-hidden="true"><use href="#i-chevron"/></svg></button><label for="page-input" class="sr-only">이동할 쪽 번호</label><input id="page-input" type="number" min="1" value="1" inputmode="numeric"><span class="page-divider">/</span><span id="page-total">1</span><span class="page-word">쪽</span><button id="next-page" type="button" class="icon-button" aria-label="다음 쪽" title="다음 쪽"><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></button></div>
+          <span class="toolbar-divider" aria-hidden="true"></span>
+          <div class="toolbar-group zoom-controls"><button id="zoom-out" type="button" class="icon-button" aria-label="축소" title="축소"><svg class="icon" aria-hidden="true"><use href="#i-minus"/></svg></button><output id="zoom-value" aria-label="확대 비율">100%</output><button id="zoom-in" type="button" class="icon-button" aria-label="확대" title="확대"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg></button><button id="fit-page" type="button" class="tool-button" title="화면 너비에 맞추기"><svg class="icon" aria-hidden="true"><use href="#i-fit"/></svg><span>너비 맞춤</span></button></div>
+          <button id="toggle-text" type="button" class="tool-button text-toggle" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-text"/></svg><span>텍스트 보기</span></button>
+        </nav>
+        <div id="editor-host" class="editor-host" hidden></div><div class="page-stage"><div id="page-host" class="page-host" aria-label="현재 문서 쪽"></div></div>
+        <section id="text-panel" class="text-panel" aria-label="문서 텍스트" hidden><div class="text-panel-heading"><h2>문서 텍스트</h2><p>필요한 내용을 선택해 복사할 수 있습니다.</p></div><pre id="document-text" tabindex="0"></pre></section>
+      </section>
+      <dialog id="shortcuts-dialog" class="shortcuts-dialog" aria-labelledby="shortcuts-title" aria-describedby="shortcuts-intro">
+        <div class="shortcuts-heading"><h2 id="shortcuts-title">키보드 단축키</h2><button id="close-shortcuts" type="button" class="icon-button" aria-label="단축키 도움말 닫기" autofocus><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+        <p id="shortcuts-intro">Mac에서는 Ctrl 대신 ⌘ Command를 사용하세요.<br>모바일·태블릿에서도 연결한 키보드로 사용할 수 있습니다.</p>
+        <dl class="shortcuts-list">
+          <div><dt>파일 열기</dt><dd><kbd>Ctrl</kbd> + <kbd>O</kbd></dd></div>
+          <div><dt>HWP 파일 다운로드</dt><dd><kbd>Ctrl</kbd> + <kbd>S</kbd></dd></div>
+          <div><dt>이 브라우저에 기기 저장</dt><dd><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd></dd></div>
+          <div><dt>실행 취소 · 다시 실행</dt><dd><kbd>Ctrl</kbd> + <kbd>Z</kbd> / <kbd>Y</kbd><small>다시 실행: Ctrl 또는 ⌘ + Shift + Z도 가능</small></dd></div>
+          <div><dt>전체 선택</dt><dd><kbd>Ctrl</kbd> + <kbd>A</kbd></dd></div>
+          <div><dt>복사 · 잘라내기 · 붙여넣기</dt><dd><kbd>Ctrl</kbd> + <kbd>C</kbd> / <kbd>X</kbd> / <kbd>V</kbd></dd></div>
+          <div><dt>굵게 · 기울임 · 밑줄</dt><dd><kbd>Ctrl</kbd> + <kbd>B</kbd> / <kbd>I</kbd> / <kbd>U</kbd></dd></div>
+          <div><dt>이전 쪽 · 다음 쪽 (읽기 모드)</dt><dd><kbd>Page Up</kbd> / <kbd>Page Down</kbd></dd></div>
+          <div><dt>도움말 닫기 · 전체화면 나가기</dt><dd><kbd>Esc</kbd></dd></div>
+        </dl>
+        <p class="shortcuts-note">글자 편집 단축키는 편집 영역에 커서를 둔 상태에서 사용하세요. 한글 조합 중에는 파일 단축키가 실행되지 않습니다. 도움말을 먼저 닫은 뒤 Esc를 다시 누르면 전체화면을 나갑니다.</p>
+      </dialog>
+      <p id="fullscreen-status" class="fullscreen-status" role="status" aria-live="polite"></p>
+      <div id="busy-overlay" class="busy-overlay" role="status" aria-live="polite" hidden><div class="busy-card"><span class="spinner" aria-hidden="true"></span><p id="busy-label">문서를 열고 있습니다…</p><button id="cancel-load" type="button" class="button secondary compact">취소</button></div></div>
+      <div class="drop-indicator" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg><strong>여기에 놓아 열기</strong><span>HWP · HWPX</span></div>
+    </main>
+  </div>
+  <footer class="statusbar"><div class="status-content"><span class="status-dot" aria-hidden="true"></span><p id="status" role="status" aria-live="polite">파일을 열어 시작하세요.</p></div><a class="statusbar-note" href="./licenses.html" target="_blank" rel="noopener">오픈소스 · 라이선스</a></footer><p class="format-notice">본 제품은 한글과컴퓨터의 한글 문서 파일(.hwp) 공개 문서를 참고하여 개발하였습니다.</p>
+</body>
+</html>

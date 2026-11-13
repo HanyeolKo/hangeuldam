@@ -1,0 +1,2 @@
+/* Host UI: use bundled Korean fonts even on systems without Korean fonts. */
+button, input, select, textarea { font-family: var(--font-family-ui, '나눔고딕', sans-serif); }

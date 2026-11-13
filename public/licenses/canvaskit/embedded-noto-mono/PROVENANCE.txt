@@ -1,0 +1,4 @@
+CanvasKit bundled modules/canvaskit/fonts/NotoMono-Regular.ttf
+Source: https://skia.googlesource.com/skia/+/refs/tags/canvaskit/0.42.0/modules/canvaskit/fonts/NotoMono-Regular.ttf
+SHA256: 41fd7ccc82375e2a1e47f0cc2c941c14d7c99ba2f57cf69c9f738d07fb257686
+Copyright and OFL1.1 declaration read from the original TTF name table (name IDs 0,13,14). The license body is the unmodified standard SIL OFL1.1 text. The font itself is unchanged.

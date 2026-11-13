@@ -1,0 +1,32 @@
+/* These rules follow the host's device category, not the iframe width. */
+#hangeuldam-touch-tools{display:none}
+#hangeuldam-zoom-out,#hangeuldam-zoom-in{display:none}
+html[data-device="phone"] #hangeuldam-zoom-out,html[data-device="phone"] #hangeuldam-zoom-in{display:block;max-width:44px;font-size:23px}
+html:is([data-device="phone"],[data-device="tablet"]) #hangeuldam-touch-tools{display:flex;gap:5px;padding:4px 8px;background:#f7faf7;border-bottom:1px solid #dbe4dc;flex-shrink:0}
+html:is([data-device="phone"],[data-device="tablet"]) #hangeuldam-touch-tools button{flex:1;min-height:44px;border:1px solid #d4dfd5;border-radius:6px;background:#fff;font:14px var(--font-family-ui,'나눔고딕',sans-serif);color:#285849}
+html:is([data-device="phone"],[data-device="tablet"]) #hangeuldam-touch-tools button[aria-expanded="true"]{background:#e4f0e8}
+html:is([data-device="phone"],[data-device="tablet"]) #menu-bar{display:flex!important;height:44px;min-height:44px;overflow-x:auto;overflow-y:hidden;max-width:100%;padding:0 4px;scrollbar-width:none}
+html:is([data-device="phone"],[data-device="tablet"]) .menu-title{display:flex;align-items:center;min-height:44px;padding:0 13px}
+html:is([data-device="phone"],[data-device="tablet"]) .menu-toolbox-toggle{position:sticky;right:0;min-width:44px;min-height:44px;background:var(--color-bg-light)}
+html:is([data-device="phone"],[data-device="tablet"]) .menu-item.open>.menu-dropdown{position:fixed;top:96px;left:8px;max-width:calc(100vw - 16px);max-height:calc(100dvh - 108px);overflow:auto}
+html:is([data-device="phone"],[data-device="tablet"]) .md-item{min-height:44px;font-size:14px}
+html:is([data-device="phone"],[data-device="tablet"]) #scroll-container{touch-action:pan-x pan-y pinch-zoom;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+html:is([data-device="phone"],[data-device="tablet"]) #style-bar{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;overflow-y:hidden;max-width:100%;padding:4px 8px;scrollbar-width:none}
+html:is([data-device="phone"],[data-device="tablet"]) #style-bar>*{flex-shrink:0}
+html:is([data-device="phone"],[data-device="tablet"]) .sb-field-grid{grid-template-columns:88px 64px 136px 86px 86px;width:max-content;max-width:none}
+html:is([data-device="phone"],[data-device="tablet"]) .sb-btn,html:is([data-device="phone"],[data-device="tablet"]) .stb-icon-btn{min-width:44px;min-height:44px}
+html:is([data-device="phone"],[data-device="tablet"]) .sb-select,html:is([data-device="phone"],[data-device="tablet"]) .sb-input{font-size:16px;min-height:36px}
+html:is([data-device="phone"],[data-device="tablet"]) .tb-btn{min-width:44px}
+html:is([data-device="phone"],[data-device="tablet"]) .dialog-wrap{max-width:calc(100vw - 16px)!important;max-height:90dvh;overflow:auto}
+html:is([data-device="phone"],[data-device="tablet"]) .dialog-btn,html:is([data-device="phone"],[data-device="tablet"]) .dialog-close{min-height:44px}
+html:is([data-device="phone"],[data-device="tablet"]) .dialog-input,html:is([data-device="phone"],[data-device="tablet"]) .dialog-select{font-size:16px;min-height:40px;max-width:100%}
+html:is([data-device="phone"],[data-device="tablet"]) #status-bar{display:flex!important;height:44px;min-height:44px;font-size:11px;padding:0 5px}
+html:is([data-device="phone"],[data-device="tablet"]) .stb-message{display:none}
+html[data-device="phone"]:not(.hangeuldam-tools-expanded) #icon-toolbar,html[data-device="phone"]:not(.hangeuldam-tools-expanded) #style-bar{display:none!important}
+html[data-device="phone"].hangeuldam-tools-expanded #style-bar{display:flex!important}
+html[data-device="phone"].hangeuldam-tools-expanded #icon-toolbar{display:flex!important}
+html[data-device="tablet"]:not(.hangeuldam-tools-expanded) #icon-toolbar{display:none!important}
+html[data-device="tablet"].hangeuldam-tools-expanded #icon-toolbar{display:flex!important}
+html[data-device="phone"] .stb-divider,html[data-device="phone"] .stb-zoom-range-wrap,html[data-device="phone"] #sb-zoom-in,html[data-device="phone"] #sb-zoom-out,html[data-device="phone"] #sb-zoom-fit-width{display:none!important}
+html[data-device="desktop"] #hangeuldam-touch-tools{display:none!important}
+@media print{#hangeuldam-touch-tools{display:none!important}}

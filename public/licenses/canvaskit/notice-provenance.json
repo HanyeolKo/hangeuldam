@@ -1,0 +1,152 @@
+[
+  {
+    "component": "brotli",
+    "path": "brotli/LICENSE",
+    "source": "https://skia.googlesource.com/external/github.com/google/brotli.git/+/6d03dfbedda1615c4cba1211f8d81735575209c8/LICENSE?format=TEXT",
+    "sha256": "3d180008e36922a4e8daec11c34c7af264fed5962d07924aea928c38e8663c94"
+  },
+  {
+    "component": "freetype",
+    "path": "freetype/LICENSE.TXT",
+    "source": "https://chromium.googlesource.com/chromium/src/third_party/freetype2.git/+/264b5fbf5b912b39f98d038bf75d39be0a73f21b/LICENSE.TXT?format=TEXT",
+    "sha256": "bd36c8b474855fa294c2ec5c184544478ef3720aad37d65a6296a4f264fd2d3b"
+  },
+  {
+    "component": "freetype",
+    "path": "freetype/docs/FTL.TXT",
+    "source": "https://chromium.googlesource.com/chromium/src/third_party/freetype2.git/+/264b5fbf5b912b39f98d038bf75d39be0a73f21b/docs/FTL.TXT?format=TEXT",
+    "sha256": "5a5ee54c5001bbad1cdc1a57cc3dd4c42199b2da09d39c7ee41fab002d02967f"
+  },
+  {
+    "component": "freetype",
+    "path": "freetype/docs/GPLv2.TXT",
+    "source": "https://chromium.googlesource.com/chromium/src/third_party/freetype2.git/+/264b5fbf5b912b39f98d038bf75d39be0a73f21b/docs/GPLv2.TXT?format=TEXT",
+    "sha256": "c4120c6752c910c299e3bd9cb3a46ff262c268303ca2069b61f92f10a5656c18"
+  },
+  {
+    "component": "freetype",
+    "path": "freetype/docs/PROBLEMS",
+    "source": "https://chromium.googlesource.com/chromium/src/third_party/freetype2.git/+/264b5fbf5b912b39f98d038bf75d39be0a73f21b/docs/PROBLEMS?format=TEXT",
+    "sha256": "952f7bda69d65416e52e027dace6b456e19f059a3e2e412a0e26ecffee03f37b"
+  },
+  {
+    "component": "harfbuzz",
+    "path": "harfbuzz/COPYING",
+    "source": "https://chromium.googlesource.com/external/github.com/harfbuzz/harfbuzz.git/+/9cb1fee51069b206effb4736e443b038d230789d/COPYING?format=TEXT",
+    "sha256": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64"
+  },
+  {
+    "component": "icu",
+    "path": "icu/LICENSE",
+    "source": "https://chromium.googlesource.com/chromium/deps/icu.git/+/d578f2e8b7bd5938e21cfb6bf15c079e0aa5b738/LICENSE?format=TEXT",
+    "sha256": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af"
+  },
+  {
+    "component": "icu",
+    "path": "icu/license.html",
+    "source": "https://chromium.googlesource.com/chromium/deps/icu.git/+/d578f2e8b7bd5938e21cfb6bf15c079e0aa5b738/license.html?format=TEXT",
+    "sha256": "c62d7697c03979f5056d28b338fafc7a1152820f7b379adf4a9d88cd37160f96"
+  },
+  {
+    "component": "libjpeg-turbo",
+    "path": "libjpeg-turbo/LICENSE.md",
+    "source": "https://chromium.googlesource.com/chromium/deps/libjpeg_turbo.git/+/e14cbfaa85529d47f9f55b0f104a579c1061f9ad/LICENSE.md?format=TEXT",
+    "sha256": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430"
+  },
+  {
+    "component": "libjpeg-turbo",
+    "path": "libjpeg-turbo/README.ijg",
+    "source": "https://chromium.googlesource.com/chromium/deps/libjpeg_turbo.git/+/e14cbfaa85529d47f9f55b0f104a579c1061f9ad/README.ijg?format=TEXT",
+    "sha256": "75815e3bf6484201a3c3d17a1bbf10f2e8e3237f84df10a2357ea896db2a81d6"
+  },
+  {
+    "component": "libpng",
+    "path": "libpng/LICENSE",
+    "source": "https://skia.googlesource.com/third_party/libpng.git/+/d5515b5b8be3901aac04e5bd8bd5c89f287bcd33/LICENSE?format=TEXT",
+    "sha256": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526"
+  },
+  {
+    "component": "libwebp",
+    "path": "libwebp/COPYING",
+    "source": "https://chromium.googlesource.com/webm/libwebp.git/+/845d5476a866141ba35ac133f856fa62f0b7445f/COPYING?format=TEXT",
+    "sha256": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf"
+  },
+  {
+    "component": "libwebp",
+    "path": "libwebp/PATENTS",
+    "source": "https://chromium.googlesource.com/webm/libwebp.git/+/845d5476a866141ba35ac133f856fa62f0b7445f/PATENTS?format=TEXT",
+    "sha256": "cc3273e0694ea5896145e0677699b53471b03ea43021ddc50e7923fbb9f5023c"
+  },
+  {
+    "component": "wuffs",
+    "path": "wuffs/LICENSE",
+    "source": "https://skia.googlesource.com/external/github.com/google/wuffs-mirror-release-c.git/+/e3f919ccfe3ef542cfc983a82146070258fb57f8/LICENSE?format=TEXT",
+    "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+  },
+  {
+    "component": "zlib",
+    "path": "zlib/LICENSE",
+    "source": "https://chromium.googlesource.com/chromium/src/third_party/zlib/+/646b7f569718921d7d4b5b8e22572ff6c76f2596/LICENSE?format=TEXT",
+    "sha256": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c"
+  },
+  {
+    "component": "freetype",
+    "path": "freetype/src/bdf/README",
+    "source": "https://chromium.googlesource.com/chromium/src/third_party/freetype2.git/+/264b5fbf5b912b39f98d038bf75d39be0a73f21b/src/bdf/README?format=TEXT",
+    "sha256": "7984455e7e5a9faba3797c8bf095fbe10cc846316b7320aff8c58402e22b82fe"
+  },
+  {
+    "component": "freetype",
+    "path": "freetype/src/pcf/README",
+    "source": "https://chromium.googlesource.com/chromium/src/third_party/freetype2.git/+/264b5fbf5b912b39f98d038bf75d39be0a73f21b/src/pcf/README?format=TEXT",
+    "sha256": "18d9782898d9eac04476e2f744678137b2a889689ed3e923e052fc396a86f86b"
+  },
+  {
+    "component": "freetype",
+    "path": "freetype/src/gzip/zlib.h",
+    "source": "https://chromium.googlesource.com/chromium/src/third_party/freetype2.git/+/264b5fbf5b912b39f98d038bf75d39be0a73f21b/src/gzip/zlib.h?format=TEXT",
+    "sha256": "c86a25c27f74cb97b8fa07b175f479f063d5064ace9995b4684063643c81cf1b"
+  },
+  {
+    "component": "freetype",
+    "path": "freetype/src/base/fthash.c",
+    "source": "https://chromium.googlesource.com/chromium/src/third_party/freetype2.git/+/264b5fbf5b912b39f98d038bf75d39be0a73f21b/src/base/fthash.c?format=TEXT",
+    "sha256": "693e5a54b3ce30140975a94a3369dbe706eb1f280c69e80da426d39cc45b94ef"
+  },
+  {
+    "component": "freetype",
+    "path": "freetype/include/freetype/internal/fthash.h",
+    "source": "https://chromium.googlesource.com/chromium/src/third_party/freetype2.git/+/264b5fbf5b912b39f98d038bf75d39be0a73f21b/include/freetype/internal/fthash.h?format=TEXT",
+    "sha256": "023d88d49d29ecf3833db7717a3f7ae223c17ec2012bdb5bf33bb67abaf616c4"
+  },
+  {
+    "component": "freetype",
+    "path": "freetype/src/autofit/ft-hb-ft.c",
+    "source": "https://chromium.googlesource.com/chromium/src/third_party/freetype2.git/+/264b5fbf5b912b39f98d038bf75d39be0a73f21b/src/autofit/ft-hb-ft.c?format=TEXT",
+    "sha256": "84dd5ddff1cec222e1755b4962faf45836238dfa3a46854dabd969eb4e50f8be"
+  },
+  {
+    "component": "freetype",
+    "path": "freetype/src/autofit/ft-hb-decls.h",
+    "source": "https://chromium.googlesource.com/chromium/src/third_party/freetype2.git/+/264b5fbf5b912b39f98d038bf75d39be0a73f21b/src/autofit/ft-hb-decls.h?format=TEXT",
+    "sha256": "ed05eec3b5657f98a0c106fa4aa2e5a4bc7f0864e5d34bd5989eee6d8b718bcf"
+  },
+  {
+    "component": "freetype",
+    "path": "freetype/src/autofit/ft-hb-types.h",
+    "source": "https://chromium.googlesource.com/chromium/src/third_party/freetype2.git/+/264b5fbf5b912b39f98d038bf75d39be0a73f21b/src/autofit/ft-hb-types.h?format=TEXT",
+    "sha256": "f106bf7cc41f52cd70907266a74a293c57bc5f71285b01c36bf198ad8b1c6234"
+  },
+  {
+    "component": "freetype",
+    "path": "freetype/src/autofit/hb-script-list.h",
+    "source": "https://chromium.googlesource.com/chromium/src/third_party/freetype2.git/+/264b5fbf5b912b39f98d038bf75d39be0a73f21b/src/autofit/hb-script-list.h?format=TEXT",
+    "sha256": "0627d9f6a59a8b09e562e8aeaf414300899308725350beeb50b62b8657399576"
+  },
+  {
+    "component": "freetype",
+    "path": "freetype/include/freetype/freetype.h",
+    "source": "https://chromium.googlesource.com/chromium/src/third_party/freetype2.git/+/264b5fbf5b912b39f98d038bf75d39be0a73f21b/include/freetype/freetype.h?format=TEXT",
+    "sha256": "953fc63557031d8c11fcfe3859f350ef5390cabee12bca51487eaea302aff955"
+  }
+]

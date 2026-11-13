@@ -1,0 +1,9 @@
+Unmodified opening copyright/license comment from src/base/fthash.c
+
+/****************************************************************************
+ *
+ * fthash.c
+ *
+ *   Hashing functions (body).
+ *
+ */

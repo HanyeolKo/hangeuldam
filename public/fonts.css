@@ -1,0 +1,5 @@
+@font-face { font-family: 'Nanum Gothic'; src: url('./fonts/NanumGothic-Regular.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: '나눔고딕'; src: url('./fonts/NanumGothic-Regular.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Nanum Myeongjo'; src: url('./fonts/NanumMyeongjo-Regular.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: '나눔명조'; src: url('./fonts/NanumMyeongjo-Regular.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+.page-host { font-synthesis: weight style; }

@@ -1,0 +1,77 @@
+/* Device-specific layout is selected by device.js, independently of window width. */
+#device-library,#device-library-close,#device-library-backdrop{display:none}
+.device-view-setting{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:14px 0 0;font-size:11px;color:var(--muted)}
+.device-view-setting select{font:inherit;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--ink);padding:7px;max-width:150px}
+html[data-device="desktop"] .app-layout{display:grid;grid-template-columns:235px minmax(0,1fr)}
+html[data-device="desktop"] .sidebar{display:flex;border-right:1px solid var(--line);border-top:0;min-height:calc(100dvh - 112px);order:0}
+html[data-device="desktop"] .sidebar-bottom{display:block;padding-top:35px}
+html[data-device="desktop"] .local-privacy{margin-top:20px;max-width:none}
+html[data-device="desktop"] .appbar{height:76px}
+html[data-device="desktop"] .readonly-badge{display:inline-flex}
+html[data-device="desktop"] .document-actions .button span{display:inline}
+html[data-device="desktop"] .document-actions{flex-wrap:wrap}
+html[data-device="desktop"] .editor-host{min-height:560px;height:calc(100dvh - 212px)}
+html[data-device="desktop"] .workspace:is(:fullscreen,.is-expanded) .editor-host{min-height:0;height:auto}
+html:is([data-device="phone"],[data-device="tablet"]) .app-layout{display:block;min-height:calc(100dvh - 96px)}
+html:is([data-device="phone"],[data-device="tablet"]) .appbar{height:64px;padding:0 14px;gap:12px}
+html:is([data-device="phone"],[data-device="tablet"]) .appbar-actions{gap:8px}
+html:is([data-device="phone"],[data-device="tablet"]) .appbar-divider,html:is([data-device="phone"],[data-device="tablet"]) .tagline,html:is([data-device="phone"],[data-device="tablet"]) kbd{display:none}
+html:is([data-device="phone"],[data-device="tablet"]) #device-library{display:inline-flex}
+html:is([data-device="phone"],[data-device="tablet"]) .button,html:is([data-device="phone"],[data-device="tablet"]) .icon-button,html:is([data-device="phone"],[data-device="tablet"]) .tool-button{min-height:44px}
+html:is([data-device="phone"],[data-device="tablet"]) .icon-button{min-width:44px}
+html:is([data-device="phone"],[data-device="tablet"]) .sidebar{display:none;position:fixed;inset:0 auto 0 0;width:min(360px,92vw);min-height:0;max-height:100dvh;z-index:20;padding:20px;overflow-y:auto;overscroll-behavior:contain;box-shadow:6px 0 24px #20382a22;border-right:1px solid var(--line)}
+html:is([data-device="phone"],[data-device="tablet"]).device-library-open .sidebar{display:flex}
+html:is([data-device="phone"],[data-device="tablet"]) #device-library-close{display:inline-flex;margin-left:auto}
+html:is([data-device="phone"],[data-device="tablet"]).device-library-open #device-library-backdrop{display:block;position:fixed;inset:0;z-index:19;border:0;background:#1f332b55}
+html:is([data-device="phone"],[data-device="tablet"]) .sidebar-heading .local-label{display:none}
+html:is([data-device="phone"],[data-device="tablet"]) .sidebar-bottom{display:block;margin-top:auto;padding-top:25px}
+html:is([data-device="phone"],[data-device="tablet"]) .offline-card{max-width:none}
+html:is([data-device="phone"],[data-device="tablet"]) .offline-card p{font-size:12px}
+html:is([data-device="phone"],[data-device="tablet"]) .local-privacy{margin:18px 0 0;max-width:none}
+html:is([data-device="phone"],[data-device="tablet"]) .device-view-setting select{min-height:44px;font-size:14px}
+html:is([data-device="phone"],[data-device="tablet"]) .saved-list .saved-item>button:last-child{width:44px}
+html:is([data-device="phone"],[data-device="tablet"]) .document-view{min-height:calc(100dvh - 98px)}
+html:is([data-device="phone"],[data-device="tablet"]) .document-heading{flex-wrap:wrap;padding:12px 16px;gap:8px}
+html:is([data-device="phone"],[data-device="tablet"]) .document-title{flex:1;min-width:0}
+html:is([data-device="phone"],[data-device="tablet"]) .document-title h1{font-size:14px;max-width:none;overflow:hidden;text-overflow:ellipsis}
+html:is([data-device="phone"],[data-device="tablet"]) .document-actions{width:100%;margin:4px 0 0;gap:6px;justify-content:flex-end}
+html:is([data-device="phone"],[data-device="tablet"]) .document-actions .button{font-size:12px;padding:8px;white-space:nowrap}
+html:is([data-device="phone"],[data-device="tablet"]) .document-actions .button span{display:inline}
+html:is([data-device="phone"],[data-device="tablet"]) .document-toolbar{position:static;flex-wrap:wrap;gap:4px;padding:6px 10px;justify-content:space-between}
+html:is([data-device="phone"],[data-device="tablet"]) .document-toolbar .toolbar-divider{display:none}
+html:is([data-device="phone"],[data-device="tablet"]) .page-navigation input{height:40px;width:40px;font-size:16px}
+html:is([data-device="phone"],[data-device="tablet"]) .zoom-controls output{font-size:12px}
+html:is([data-device="phone"],[data-device="tablet"]) .page-stage{padding:12px;min-height:240px;max-height:calc(100dvh - 280px);touch-action:pan-x pan-y pinch-zoom;overscroll-behavior:contain}
+html:is([data-device="phone"],[data-device="tablet"]) .editor-host{min-height:360px;height:calc(100dvh - 248px)}
+html:is([data-device="phone"],[data-device="tablet"]) .statusbar{height:34px;padding:0 12px;gap:10px}
+html:is([data-device="phone"],[data-device="tablet"]) .statusbar-note{display:block}
+html:is([data-device="phone"],[data-device="tablet"]) .status-content{flex:1}
+html:is([data-device="phone"],[data-device="tablet"]) .status-content p{max-width:none}
+html:is([data-device="phone"],[data-device="tablet"]) .workspace:is(:fullscreen,.is-expanded) .document-view{min-height:0}
+html:is([data-device="phone"],[data-device="tablet"]) .workspace:is(:fullscreen,.is-expanded) .page-stage,html:is([data-device="phone"],[data-device="tablet"]) .workspace:is(:fullscreen,.is-expanded) .editor-host{min-height:0;max-height:none;height:auto}
+html[data-device="phone"] .readonly-badge{display:none}
+html[data-device="phone"] .brand{font-size:20px;gap:7px}
+html[data-device="phone"] .brand img{width:29px;height:29px}
+html[data-device="phone"] .appbar .button{font-size:12px;padding:8px 10px;min-width:0}
+html[data-device="phone"] .document-heading{padding:10px 12px}
+html[data-device="phone"] .document-file-icon{width:30px;height:36px}
+html[data-device="phone"] .document-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+html[data-device="phone"] .document-actions>.icon-button{width:100%;border:1px solid var(--line);background:#fff}
+html[data-device="phone"] .document-actions .button .icon{display:none}
+html[data-device="phone"] .document-toolbar{gap:0;padding:4px 6px}
+html[data-device="phone"] .page-word{display:none}
+html[data-device="phone"] .zoom-controls{gap:0}
+html[data-device="phone"] .text-toggle{margin-left:auto}
+html[data-device="phone"] #fit-page span{display:none}
+html[data-device="phone"] .editor-host{height:calc(100dvh - 284px)}
+html[data-device="phone"] .empty-state{padding:20px;min-height:calc(100dvh - 100px)}
+html[data-device="phone"] .welcome-content{padding:28px 0 34px}
+html[data-device="phone"] .paper-illustration{transform:scale(.8);margin-top:-24px;margin-bottom:-10px}
+html[data-device="phone"] .welcome-content h1{font-size:23px}
+html[data-device="tablet"] .readonly-badge{display:inline-flex}
+html[data-device="tablet"] .empty-state{min-height:calc(100dvh - 100px)}
+html[data-device="tablet"] .document-actions{display:flex;flex-wrap:wrap}
+html[data-device="tablet"] .document-actions>.button{padding:10px 14px}
+html[data-device="tablet"] .page-stage{padding:20px}
+html[data-device="tablet"] .editor-host{min-height:440px}
+@media print{#device-library,#device-library-close,#device-library-backdrop,.device-view-setting{display:none!important}}

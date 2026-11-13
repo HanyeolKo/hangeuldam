@@ -1,0 +1,29 @@
+node_modules/
+.test-data/
+test-results/
+playwright-report/
+__pycache__/
+*.pyc
+*.log
+
+# Local secrets and deployment configuration
+.env
+.env.*
+!.env.example
+deploy/
+infra/
+.secrets/
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Local working copies and document data
+work/
+backups/
+.DS_Store
+
+# User documents are never source files
+*.hwp
+*.hwpx
+!public/sample.hwp

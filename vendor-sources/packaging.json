@@ -1,0 +1,6 @@
+{
+  "sharedWasm": "public/vendor/rhwp_bg.wasm",
+  "sha256": "c3b0632b84881f81f2c80be7c2f9e44a4086cb01e05a6a9107a3b3c6350abc1d",
+  "replacedReferences": 2,
+  "operation": "Only equivalent WASM URLs were changed. See scripts/vendor-studio.mjs."
+}
