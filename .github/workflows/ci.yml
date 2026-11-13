@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-and-package:
+    name: Browser tests and static build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      CI: 'true'
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci --ignore-scripts
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Download and verify test fixtures
+        run: npm run test:fixtures
+      - name: Build offline assets
+        run: npm run build
+      - name: Test reading, editing, privacy, and offline use
+        run: |
+          mkdir -p .test-data/results
+          npm test
+      - name: Package verified static files
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: node scripts/package-artifact.mjs "$RUNNER_TEMP/hangeuldam-static"
+      - name: Publish static artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: hangeuldam-static
+          path: ${{ runner.temp }}/hangeuldam-static/
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 6
+          include-hidden-files: false
+      - name: Save failed test evidence
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: browser-test-failure-${{ github.run_attempt }}
+          path: .test-data/results/
+          if-no-files-found: ignore
+          retention-days: 7
